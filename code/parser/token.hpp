@@ -248,7 +248,7 @@ namespace Parser
             column += 1;
             if (character == CharT('\n'))
             {
-                column = 0;
+                column = 1;
                 row += 1;
             }
         }
