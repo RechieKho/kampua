@@ -1,5 +1,5 @@
-#ifndef TOKEN_HPP
-#define TOKEN_HPP
+#ifndef PARSER_TOKEN_HPP
+#define PARSER_TOKEN_HPP
 
 #include <string>
 #include <vector>
@@ -7,19 +7,40 @@
 #include <stdexcept>
 #include <sstream>
 
+/**
+ * @file
+ *
+ * @ingroup Parser
+ *
+ * @brief Generic tokenizer algorithm.
+ */
+
 namespace Parser
 {
+
+    //! @brief Builtin token's type for token classification.
+    //! @see tokenize
     enum TokenTypes : std::size_t
     {
         OMITTED = 0,
         DEFAULT = 1
     };
 
+    //! @brief Rule for specifying `tokenize` when to split.
+    //! @tparam CharT Type of character.
+    //! @see tokenize
     template <typename CharT>
     struct TokenCutRule
     {
+        //! @brief Characters that would be together.
         std::basic_string_view<CharT> characters;
+
+        //! @brief Maximum count for characters to be together.
         std::size_t max_count;
+
+        //! @brief User-defined type for classification.
+        //! Could be filled with `TokenTypes` value.
+        //! @see TokenTypes
         std::size_t type;
 
         constexpr TokenCutRule(std::basic_string_view<CharT> p_characters, std::size_t p_max_count, std::size_t p_type)
@@ -27,12 +48,24 @@ namespace Parser
         ~TokenCutRule() = default;
     };
 
+    //! @brief Rule for specifying `tokenize` when to group (ignore `TokenCutRule`).
+    //! @tparam CharT Type of character.
+    //! @see tokenize
     template <typename CharT>
     struct TokenAmassRule
     {
+        //! @brief Starting character to group.
         CharT starting_mark;
+
+        //! @brief Ending character to group.
         CharT ending_mark;
+
+        //! @brief Type for `starting_mark` and `ending_mark`.
+        //! @see starting_mark
+        //! @see ending_mark
         std::size_t mark_type;
+
+        //! @brief Type for token between `starting_mark` and `ending_mark`.
         std::size_t content_type;
 
         constexpr TokenAmassRule(CharT p_starting_mark, CharT p_ending_mark, std::size_t p_mark_type, std::size_t p_content_type)
@@ -40,6 +73,10 @@ namespace Parser
         ~TokenAmassRule() = default;
     };
 
+    //! @brief Token with metadata output by `tokenize`.
+    //! The lifetime depends on the `p_code` parameter of `tokenize`.
+    //! @tparam CharT Type of character.
+    //! @see tokenize
     template <typename CharT>
     struct Token
     {
@@ -53,6 +90,18 @@ namespace Parser
         ~Token() = default;
     };
 
+    //! @brief Tokenizer algorithm.
+    //! If the characters are from two different `p_cut_rules`, they will be split into different token,
+    //! else they would be in the same token until the its `TokenCutRule::max_count` is reached.
+    //! Anyting between the starting and ending mark specified by `p_amass_rules` will ignore `p_cut_rules`.
+    //! @tparam CharT
+    //! @param p_code Code to be tokenized.
+    //! @param p_cut_rules Rules regarding when to split the token.
+    //! @param p_amass_rules Rules regarding when to ignore `p_cut_rules`.
+    //! @return Vector of tokens.
+    //! @see TokenCutRule
+    //! @see TokenAmassRule
+    //! @see Token
     template <typename CharT>
     std::vector<Token<CharT>> tokenize(std::basic_string_view<CharT> p_code, std::span<const TokenCutRule<CharT>> p_cut_rules, std::span<const TokenAmassRule<CharT>> p_amass_rules)
     {
@@ -226,4 +275,4 @@ namespace Parser
 
 } // namespace Parser
 
-#endif // TOKEN_HPP
+#endif // PARSER_TOKEN_HPP
