@@ -13,14 +13,14 @@
 #include <memory>
 #include <span>
 
-#include "asn.hpp"
+#include "node.hpp"
 #include "function_prototype.hpp"
 
 namespace AST
 {
 
     //! @brief Function.
-    class Function : public ASN
+    class Function : public Node
     {
     private:
         //! @brief Function signature
@@ -28,15 +28,15 @@ namespace AST
         FunctionPrototype prototype;
 
         //! @brief List of statements in function body.
-        std::vector<std::unique_ptr<ASN>> statements;
+        std::vector<std::unique_ptr<Node>> statements;
 
     public:
-        Function(const FunctionPrototype &p_prototype, std::vector<std::unique_ptr<ASN>> p_statements) noexcept;
-        Function(FunctionPrototype &&p_prototype, std::vector<std::unique_ptr<ASN>> p_statements) noexcept;
+        Function(const FunctionPrototype &p_prototype, std::vector<std::unique_ptr<Node>> p_statements) noexcept;
+        Function(FunctionPrototype &&p_prototype, std::vector<std::unique_ptr<Node>> p_statements) noexcept;
         ~Function() override;
 
         const FunctionPrototype &view_prototype() const;
-        const std::vector<std::unique_ptr<ASN>> &view_statements() const;
+        const std::vector<std::unique_ptr<Node>> &view_statements() const;
     };
 
 } // namespace AST

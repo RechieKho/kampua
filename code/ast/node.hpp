@@ -13,10 +13,10 @@ namespace AST
 {
 
     //! @brief Base class for node in abstract syntax tree.
-    class ASN
+    class Node
     {
     public:
-        virtual ~ASN() = 0;
+        virtual ~Node() = 0;
     };
 
 } // namespace AST

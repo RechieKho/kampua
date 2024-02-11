@@ -11,14 +11,14 @@
 
 #include <string>
 
-#include "asn.hpp"
+#include "node.hpp"
 #include "vessel.hpp"
 
 namespace AST
 {
 
     //! @brief Signature of a function.
-    class FunctionPrototype : public ASN
+    class FunctionPrototype : public Node
     {
     private:
         //! @brief Name of the function.
