@@ -1,6 +1,7 @@
 #ifndef PARSER_TOKEN_HPP
 #define PARSER_TOKEN_HPP
 
+#include <concepts>
 #include <string>
 #include <vector>
 #include <span>
@@ -18,6 +19,16 @@
 namespace Parser
 {
 
+    template <typename T>
+    concept IsChar =
+        std::same_as<T, char> ||
+        std::same_as<T, signed char> ||
+        std::same_as<T, unsigned char> ||
+        std::same_as<T, wchar_t> ||
+        std::same_as<T, char8_t> ||
+        std::same_as<T, char16_t> ||
+        std::same_as<T, char32_t>;
+
     //! @brief Builtin token's type for token classification.
     //! @see tokenize
     enum TokenTypes : std::size_t
@@ -31,6 +42,7 @@ namespace Parser
     //! @tparam CharT Type of character.
     //! @see tokenize
     template <typename CharT>
+        requires IsChar<CharT>
     struct TokenCutRule
     {
         //! @brief Characters that would be together.
@@ -53,6 +65,7 @@ namespace Parser
     //! @tparam CharT Type of character.
     //! @see tokenize
     template <typename CharT>
+        requires IsChar<CharT>
     struct TokenAmassRule
     {
         //! @brief Starting character to group.
@@ -79,6 +92,7 @@ namespace Parser
     //! @tparam CharT Type of character.
     //! @see tokenize
     template <typename CharT>
+        requires IsChar<CharT>
     struct Token
     {
         std::basic_string_view<CharT> view;
@@ -104,6 +118,7 @@ namespace Parser
     //! @see TokenAmassRule
     //! @see Token
     template <typename CharT>
+        requires IsChar<CharT>
     std::vector<Token<CharT>> tokenize(std::basic_string_view<CharT> p_code, std::span<const TokenCutRule<CharT>> p_cut_rules, std::span<const TokenAmassRule<CharT>> p_amass_rules)
     {
         std::vector<Token<CharT>> tokens;
