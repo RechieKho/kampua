@@ -23,7 +23,8 @@ namespace Parser
     enum TokenTypes : std::size_t
     {
         OMITTED = 0,
-        DEFAULT = 1
+        DEFAULT = 1,
+        UTMOST
     };
 
     //! @brief Rule for specifying `tokenize` when to split.
