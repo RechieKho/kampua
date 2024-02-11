@@ -5,6 +5,7 @@ using namespace Parser;
 
 int main()
 {
+#if true
     const char *code = "var something := 'some string.'\nvar another_thing := 'sometext'";
 
     try
@@ -19,5 +20,6 @@ int main()
     {
         std::cout << "Error: " << e.what() << std::endl;
     }
+#endif
     return 0;
 }
