@@ -68,10 +68,10 @@ namespace Cleave
     //! @see CleaveOption
     template <typename T, typename C>
         requires Iterable<C> && ValueTyped<C> && Cleaver<T, typename C::value_type>
-    auto cleave(C &p_container, T p_cleaver)
+    auto cleave(const C &p_container, T p_cleaver)
     try
     {
-        using ElementType = typename C::value_type;
+        using ElementType = const typename C::value_type;
         using CleaverResultType = typename T::value_type;
         using ViewType = std::tuple<std::span<ElementType>, CleaverResultType>;
         using OutputType = std::vector<ViewType>;
@@ -149,6 +149,11 @@ namespace Cleave
     {
         throw;
     }
+
+    //! @brief Forbidding cleaving rvalue.
+    template <typename T, typename C>
+        requires Iterable<C> && ValueTyped<C> && Cleaver<T, typename C::value_type>
+    auto cleave(C &&p_container, T p_cleaver) = delete;
 
 } // namespace Cleave
 
