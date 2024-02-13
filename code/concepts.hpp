@@ -25,4 +25,11 @@ concept ValueTyped = requires {
     typename T::value_type;
 };
 
+template <typename T>
+concept Character = std::convertible_to<T, char> ||
+                    std::convertible_to<T, wchar_t> ||
+                    std::convertible_to<T, char8_t> ||
+                    std::convertible_to<T, char16_t> ||
+                    std::convertible_to<T, char32_t>;
+
 #endif // CONCEPTS_HPP

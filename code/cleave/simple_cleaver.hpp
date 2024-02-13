@@ -35,7 +35,7 @@ namespace Cleave
 
         ~SimpleCleaver() = default;
 
-        value_type cleave(const T &p_value) const
+        value_type cleave(const T &p_value, CleaveChunkSize p_size) const
         {
             if (p_value == value)
                 return C;
@@ -43,7 +43,7 @@ namespace Cleave
                 return CleaveOption::IGNORE;
         }
 
-        value_type terminate() const
+        value_type terminate(CleaveChunkSize p_size) const
         {
             return CleaveOption::IGNORE;
         }

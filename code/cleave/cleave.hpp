@@ -19,6 +19,7 @@ namespace Cleave
 {
 
     using CleaveOptionType = uint8_t;
+    using CleaveChunkSize = typename std::size_t;
 
     //! @brief Option for `cleave` function returned by cleaver.
     //! @see cleave
@@ -33,9 +34,6 @@ namespace Cleave
         //! @brief Cleave after the current element.
         AFTER,
 
-        //! @brief Cleave before and after the current element.
-        BOTH,
-
         //! @brief Cleave and omit the current element.
         OMIT
     };
@@ -44,13 +42,13 @@ namespace Cleave
     template <typename T, typename E>
     concept Cleaver = ValueTyped<T> &&
                       std::convertible_to<typename T::value_type, CleaveOptionType> &&
-                      requires(T p_cleaver, const E &p_element) {
+                      requires(T p_cleaver, const E &p_element, CleaveChunkSize p_size) {
                           {
-                              p_cleaver.cleave(p_element)
+                              p_cleaver.cleave(p_element, p_size)
                           } -> std::same_as<typename T::value_type>;
 
                           {
-                              p_cleaver.terminate()
+                              p_cleaver.terminate(p_size)
                           } -> std::same_as<typename T::value_type>;
                       };
 
@@ -83,7 +81,7 @@ namespace Cleave
         for (auto i = p_container.cbegin(); i != p_container.cend(); i++)
         {
             const auto &current = *i;
-            auto result = p_cleaver.cleave(current);
+            auto result = p_cleaver.cleave(current, i - start);
             auto end = i;
 
             // Record chunk.
@@ -91,43 +89,31 @@ namespace Cleave
             {
             case CleaveOption::BEFORE:
             {
-                chunks.push_back(
-                    ViewType(
-                        std::span<ElementType>(start, i),
-                        std::move(result)));
+                if (start != i)
+                    chunks.push_back(
+                        ViewType(
+                            std::span<ElementType>(start, i),
+                            std::move(result)));
                 start = i;
                 break;
             }
             case CleaveOption::AFTER:
             {
-                chunks.push_back(
-                    ViewType(
-                        std::span<ElementType>(start, i + 1),
-                        std::move(result)));
-                start = i + 1;
-                break;
-            }
-            case CleaveOption::BOTH:
-            {
-                chunks.push_back(
-                    ViewType(
-                        std::span<ElementType>(start, i),
-                        std::move(result)));
-
-                chunks.push_back(
-                    ViewType(
-                        std::span<ElementType>(i, i + 1),
-                        std::move(result)));
-
+                if (start != i)
+                    chunks.push_back(
+                        ViewType(
+                            std::span<ElementType>(start, i + 1),
+                            std::move(result)));
                 start = i + 1;
                 break;
             }
             case CleaveOption::OMIT:
             {
-                chunks.push_back(
-                    ViewType(
-                        std::span<ElementType>(start, i),
-                        std::move(result)));
+                if (start != i)
+                    chunks.push_back(
+                        ViewType(
+                            std::span<ElementType>(start, i),
+                            std::move(result)));
 
                 start = i + 1;
             }
@@ -141,7 +127,7 @@ namespace Cleave
             chunks.push_back(
                 ViewType(
                     std::span<ElementType>(start, p_container.cend()),
-                    std::move(p_cleaver.terminate())));
+                    std::move(p_cleaver.terminate(start - p_container.cend()))));
 
         return chunks;
     }
