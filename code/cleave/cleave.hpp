@@ -42,17 +42,17 @@ namespace Cleave
 
     //! @brief Cleaver object that handles when to cleave object.
     template <typename T, typename E>
-    concept Cleaver = ValueTyped<T> && requires(T p_cleaver, const E &p_element) {
-        {
-            p_cleaver.cleave(p_element)
-        } -> std::same_as<typename T::value_type>;
+    concept Cleaver = ValueTyped<T> &&
+                      std::convertible_to<typename T::value_type, CleaveOptionType> &&
+                      requires(T p_cleaver, const E &p_element) {
+                          {
+                              p_cleaver.cleave(p_element)
+                          } -> std::same_as<typename T::value_type>;
 
-        {
-            p_cleaver.terminate()
-        } -> std::same_as<typename T::value_type>;
-
-        std::convertible_to<typename T::value_type, CleaveOptionType>;
-    };
+                          {
+                              p_cleaver.terminate()
+                          } -> std::same_as<typename T::value_type>;
+                      };
 
     //! @brief Cleave container based on instruction given by cleaver object.
     //! `p_cleaver::cleave(current_element)` will be called on each of the element in the container.
@@ -63,11 +63,11 @@ namespace Cleave
     //! @tparam C Container type.
     //! @param p_container Container to be cleaved.
     //! @param p_cleaver Cleaver object.
-    //! @return A vector of tuple of element span and cleaver's return value.
+    //! @return A vector of tuple of constant element span and cleaver's return value.
     //! @see Cleaver
     //! @see CleaveOption
     template <typename T, typename C>
-        requires Iterable<C> && ValueTyped<C> && Cleaver<T, typename C::value_type>
+        requires ConstContiguousIterable<C> && ValueTyped<C> && Cleaver<T, typename C::value_type>
     auto cleave(const C &p_container, T p_cleaver)
     try
     {
@@ -77,10 +77,10 @@ namespace Cleave
         using OutputType = std::vector<ViewType>;
 
         auto chunks = OutputType();
-        auto start = p_container.begin();
+        auto start = p_container.cbegin();
 
         // Moving end of span.
-        for (auto i = p_container.begin(); i != p_container.end(); i++)
+        for (auto i = p_container.cbegin(); i != p_container.cend(); i++)
         {
             const auto &current = *i;
             auto result = p_cleaver.cleave(current);
@@ -137,10 +137,10 @@ namespace Cleave
         }
 
         // Record chunk.
-        if (start != p_container.end())
+        if (start != p_container.cend())
             chunks.push_back(
                 ViewType(
-                    std::span<ElementType>(start, p_container.end()),
+                    std::span<ElementType>(start, p_container.cend()),
                     std::move(p_cleaver.terminate())));
 
         return chunks;
@@ -152,7 +152,7 @@ namespace Cleave
 
     //! @brief Forbidding cleaving rvalue.
     template <typename T, typename C>
-        requires Iterable<C> && ValueTyped<C> && Cleaver<T, typename C::value_type>
+        requires ConstContiguousIterable<C> && ValueTyped<C> && Cleaver<T, typename C::value_type>
     auto cleave(C &&p_container, T p_cleaver) = delete;
 
 } // namespace Cleave

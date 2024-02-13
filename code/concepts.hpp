@@ -8,11 +8,16 @@
  */
 
 #include <concepts>
+#include <iterator>
 
 template <typename T>
-concept Iterable = requires(T iterable) {
-    iterable.begin();
-    iterable.end();
+concept ConstContiguousIterable = requires(T p_iterable) {
+    {
+        p_iterable.cbegin()
+    } -> std::contiguous_iterator;
+    {
+        p_iterable.cend()
+    } -> std::contiguous_iterator;
 };
 
 template <typename T>
