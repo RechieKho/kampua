@@ -5,9 +5,22 @@
 
 #include <memory>
 
+/**
+ * @file
+ *
+ * @ingroup Cleave
+ *
+ * @brief Simple Cleaver for `cleave` function.
+ * @see Cleave::cleave
+ */
+
 namespace Cleave
 {
 
+    //! @brief Simple Cleaver for `cleave` function.
+    //! Cleave on `SimpleCleaver::value` by cleave option specified.
+    //! @tparam T Type of element.
+    //! @tparam C Cleave option.
     template <typename T, CleaveOption C = CleaveOption::OMIT>
     class SimpleCleaver
     {
