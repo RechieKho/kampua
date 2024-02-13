@@ -53,8 +53,8 @@ namespace Cleave
                       };
 
     //! @brief Cleave container based on instruction given by cleaver object.
-    //! `p_cleaver::cleave(current_element)` will be called on each of the element in the container.
-    //! `p_cleaver::terminate()` will be called when it is finished.
+    //! `p_cleaver::cleave(current_element, chunk_size)` will be called on each of the element in the container.
+    //! `p_cleaver::terminate(chunk_size)` will be called when it is finished.
     //! The result of the methods should be able to convert to `CleaveOptionType` to determine how to cleave.
     //! The result of the methods would append onto each chunk to record user's data describing each chunk.
     //! @tparam T Cleaver type.
