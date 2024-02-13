@@ -1,19 +1,19 @@
 #include <iostream>
-#include "parser/parser.hpp"
-
-using namespace Parser;
+#include "kampua/cleaver.hpp"
 
 int main()
 {
 #if true
-    const char *code = "var something := 'some string.'\nvar another_thing := 'sometext'";
+    auto code = std::basic_string<char>("var something : ^^^T = 'some string.';;;\nvar another_thing := 'sometext'");
+    auto cleaver = Kampua::Cleaver<char>();
 
     try
     {
-        const auto result = parse<char>(code);
-        for (const auto &token : result)
+        for (auto chunk : Cleave::cleave(code, cleaver))
         {
-            std::cout << '\'' << token.view << "\' [column: " << token.column << "; row: " << token.row << "]." << '\n';
+            auto view = std::get<std::span<const char>>(chunk);
+            auto data = std::get<Kampua::Cleaver<char>::Result>(chunk);
+            std::cout << std::basic_string_view<char>(view.begin(), view.end()) << " [row :" << data.get_row() << "; column: " << data.get_column() << "]." << std::endl;
         }
     }
     catch (std::runtime_error e)
