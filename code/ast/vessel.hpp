@@ -9,6 +9,8 @@
  * @brief A value holder of given type.
  */
 
+#include "../concepts.hpp"
+
 #include <string>
 #include <vector>
 #include <span>
@@ -18,27 +20,40 @@ namespace AST
 
     //! @brief A value holder of given type.
     //! Such as variable, parameter and etc.
+    //! @tparam T Character Type.
+    template <typename T>
+        requires Character<T>
     class Vessel
     {
     private:
         //! @brief Name of the value holder.
-        std::string identifier;
+        std::basic_string<T> identifier;
 
         //! @brief Type of the value it holds.
-        std::string type;
+        std::basic_string<T> type;
 
         //! @brief Mutability of the holder and its pointed value (if it is a pointer).
         std::vector<bool> mutability;
 
     public:
-        Vessel(const std::string &p_identifier, const std::string &p_type, const std::vector<bool> &p_mutability) noexcept;
-        Vessel(std::string &&p_identifier, std::string &&p_type, std::vector<bool> &&p_mutability) noexcept;
+        Vessel(std::basic_string<T> p_identifier, std::basic_string<T> p_type, std::vector<bool> p_mutability) noexcept
+            : identifier(std::move(p_identifier)), type(std::move(p_type)), mutability(std::move(p_mutability)) {}
+
+        Vessel(const Vessel<T> &p_vessel)
+            : identifier(p_vessel.identifier), type(p_vessel.type), mutability(p_vessel.mutability) {}
+
+        Vessel(Vessel<T> &&p_vessel)
+            : identifier(std::move(p_vessel.identifier)), type(std::move(p_vessel.type)), mutability(std::move(p_vessel.mutability)) {}
+
         ~Vessel() = default;
 
-        std::size_t get_pointer_degree() const;
-        const std::string &view_identifier() const;
-        const std::string &view_type() const;
-        const std::vector<bool> &view_mutability() const;
+        inline auto get_pointer_degree() const & noexcept { return mutability.size(); }
+
+        inline const std::basic_string<T> &view_identifier() const & noexcept { return identifier; }
+
+        inline const std::basic_string<T> &view_type() const & noexcept { return type; }
+
+        inline const std::vector<bool> &view_mutability() const & noexcept { return mutability; }
     };
 
 } // namespace AST

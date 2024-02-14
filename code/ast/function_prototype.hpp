@@ -9,31 +9,43 @@
  * @brief Abstract syntax node for function prototype.
  */
 
-#include <string>
-
 #include "node.hpp"
 #include "vessel.hpp"
+#include "../concepts.hpp"
+
+#include <string>
 
 namespace AST
 {
 
     //! @brief Signature of a function.
+    //! @tparam T Character Type.
+    template <typename T>
+        requires Character<T>
     class FunctionPrototype : public Node
     {
     private:
         //! @brief Name of the function.
-        std::string identifier;
+        std::basic_string<T> identifier;
 
         //! @brief Parameters of the function.
-        std::vector<Vessel> parameters;
+        std::vector<Vessel<T>> parameters;
 
     public:
-        FunctionPrototype(const std::string &p_identifier, const std::vector<Vessel> &p_parameters) noexcept;
-        FunctionPrototype(std::string &&p_identifier, std::vector<Vessel> &&p_parameters) noexcept;
-        ~FunctionPrototype() override;
+        FunctionPrototype(std::basic_string<T> p_identifier, std::vector<Vessel<T>> p_parameters) noexcept
+            : identifier(std::move(p_identifier)), parameters(std::move(parameters)) {}
 
-        const std::string &view_identifier() const;
-        const std::vector<Vessel> &view_parameters() const;
+        FunctionPrototype(const FunctionPrototype<T> &p_prototype)
+            : identifier(p_prototype.identifier), parameters(p_prototype.identifier) {}
+
+        FunctionPrototype(FunctionPrototype<T> &&p_prototype)
+            : identifier(std::move(p_prototype.identifier)), parameters(std::move(p_prototype.identifier)) {}
+
+        ~FunctionPrototype() override = default;
+
+        inline const std::basic_string<T> &view_identifier() const & noexcept { return identifier; }
+
+        inline const std::vector<Vessel<T>> &view_parameters() const & noexcept { return identifier; }
     };
 
 } // namespace AST

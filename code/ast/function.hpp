@@ -9,34 +9,46 @@
  * @brief Abstract syntax node for functions.
  */
 
+#include "node.hpp"
+#include "function_prototype.hpp"
+#include "../concepts.hpp"
+
 #include <vector>
 #include <memory>
 #include <span>
-
-#include "node.hpp"
-#include "function_prototype.hpp"
 
 namespace AST
 {
 
     //! @brief Function.
+    //! @tparam T Character Type.
+    template <typename T>
+        requires Character<T>
     class Function : public Node
     {
     private:
         //! @brief Function signature
         //! @see FunctionPrototype
-        FunctionPrototype prototype;
+        FunctionPrototype<T> prototype;
 
         //! @brief List of statements in function body.
         std::vector<std::unique_ptr<Node>> statements;
 
     public:
-        Function(const FunctionPrototype &p_prototype, std::vector<std::unique_ptr<Node>> p_statements) noexcept;
-        Function(FunctionPrototype &&p_prototype, std::vector<std::unique_ptr<Node>> p_statements) noexcept;
-        ~Function() override;
+        Function(FunctionPrototype<T> p_prototype, std::vector<std::unique_ptr<Node>> p_statements) noexcept
+            : prototype(std::move(p_prototype)), statements(std::move(p_statements)) {}
 
-        const FunctionPrototype &view_prototype() const;
-        const std::vector<std::unique_ptr<Node>> &view_statements() const;
+        Function(const Function<T> &p_function)
+            : prototype(p_function.prototype), statements(p_function.statements) {}
+
+        Function(Function<T> &&p_function)
+            : prototype(std::move(p_function.prototype)), statements(std::move(p_function.statements)) {}
+
+        ~Function() override = default;
+
+        inline const FunctionPrototype<T> &view_prototype() const & noexcept { return prototype; }
+
+        inline const std::vector<std::unique_ptr<Node>> &view_statements() const & noexcept { return statements; }
     };
 
 } // namespace AST
