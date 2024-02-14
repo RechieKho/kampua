@@ -24,7 +24,7 @@ namespace Tree
     //! @tparam T Character Type.
     template <typename T>
         requires Character<T>
-    class Function : public Node
+    class Function : public Node<T>
     {
     private:
         //! @brief Function signature
@@ -32,10 +32,10 @@ namespace Tree
         FunctionPrototype<T> prototype;
 
         //! @brief List of statements in function body.
-        std::vector<std::unique_ptr<Node>> statements;
+        std::vector<std::unique_ptr<Node<T>>> statements;
 
     public:
-        Function(FunctionPrototype<T> p_prototype, std::vector<std::unique_ptr<Node>> p_statements) noexcept
+        Function(FunctionPrototype<T> p_prototype, std::vector<std::unique_ptr<Node<T>>> p_statements) noexcept
             : prototype(std::move(p_prototype)), statements(std::move(p_statements)) {}
 
         ~Function() override = default;
@@ -44,7 +44,7 @@ namespace Tree
 
         inline const FunctionPrototype<T> &view_prototype() const & noexcept { return prototype; }
 
-        inline const std::vector<std::unique_ptr<Node>> &view_statements() const & noexcept { return statements; }
+        inline const std::vector<std::unique_ptr<Node<T>>> &view_statements() const & noexcept { return statements; }
     };
 
 } // namespace Tree

@@ -22,7 +22,7 @@ namespace Tree
     //! @tparam T Character Type.
     template <typename T>
         requires Character<T>
-    class FunctionPrototype : public Node
+    class FunctionPrototype : public Node<T>
     {
     private:
         //! @brief Name of the function.
