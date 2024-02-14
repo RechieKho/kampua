@@ -35,13 +35,9 @@ namespace AST
         FunctionPrototype(std::basic_string<T> p_identifier, std::vector<Vessel<T>> p_parameters) noexcept
             : identifier(std::move(p_identifier)), parameters(std::move(parameters)) {}
 
-        FunctionPrototype(const FunctionPrototype<T> &p_prototype)
-            : identifier(p_prototype.identifier), parameters(p_prototype.identifier) {}
-
-        FunctionPrototype(FunctionPrototype<T> &&p_prototype)
-            : identifier(std::move(p_prototype.identifier)), parameters(std::move(p_prototype.identifier)) {}
-
         ~FunctionPrototype() override = default;
+
+        inline auto operator<=>(const FunctionPrototype<T> &p_prototype) const & = default;
 
         inline const std::basic_string<T> &view_identifier() const & noexcept { return identifier; }
 

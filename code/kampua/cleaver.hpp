@@ -64,12 +64,15 @@ namespace Kampua
             TagType tag;
 
         public:
-            Result(Cleave::CleaveOption p_cleave_option, PositionType p_row, PositionType p_column, TagType p_tag)
+            Result(Cleave::CleaveOption p_cleave_option, PositionType p_row, PositionType p_column, TagType p_tag) noexcept
                 : cleave_option(p_cleave_option), row(p_row), column(p_column), tag(p_tag) {}
-            ~Result() = default;
+
+            inline auto operator<=>(const Result &p_result) const & = default;
 
             inline auto get_row() const & { return row; }
+
             inline auto get_column() const & { return column; }
+
             inline auto get_tag() const & { return tag; }
 
             operator Cleave::CleaveOption() const & { return cleave_option; }
@@ -84,18 +87,18 @@ namespace Kampua
             Cleave::CleaveOption cleave_option;
 
         public:
-            Kind(const std::basic_string<T> &p_characters, CountType p_max_count, TagType p_tag, Cleave::CleaveOption p_cleave_option = Cleave::CleaveOption::BEFORE)
-                : characters(p_characters), max_count(p_max_count), tag(p_tag), cleave_option(p_cleave_option) {}
-            Kind(std::basic_string<T> &&p_characters, CountType p_max_count, TagType p_tag, Cleave::CleaveOption p_cleave_option = Cleave::CleaveOption::BEFORE)
+            Kind(std::basic_string<T> p_characters, CountType p_max_count, TagType p_tag, Cleave::CleaveOption p_cleave_option = Cleave::CleaveOption::BEFORE) noexcept
                 : characters(std::move(p_characters)), max_count(p_max_count), tag(p_tag), cleave_option(p_cleave_option) {}
-            ~Kind() = default;
 
             inline auto operator<=>(const Kind &p_kind) const & = default;
 
-            inline const std::basic_string<T> &borrow_characters() const & { return characters; }
             inline auto get_max_count() const & { return max_count; }
+
             inline auto get_tag() const & { return tag; }
+
             inline auto get_cleave_option() const & { return cleave_option; }
+
+            inline const std::basic_string<T> &view_characters() const & { return characters; }
         };
 
         class Unifier
@@ -106,16 +109,19 @@ namespace Kampua
             TagType tag;
 
         public:
-            constexpr Unifier(T p_start_unify_mark, T p_end_unify_mark, TagType p_tag)
+            Unifier(T p_start_unify_mark, T p_end_unify_mark, TagType p_tag) noexcept
                 : start_unify_mark(p_start_unify_mark), end_unify_mark(p_end_unify_mark), tag(p_tag) {}
-            ~Unifier() = default;
 
-            inline auto operator<=>(const Unifier &p_kind) const & = default;
+            inline auto operator<=>(const Unifier &p_unifier) const & = default;
 
-            inline bool is_start_unify_mark(T p_character) const & { return start_unify_mark == p_character; }
-            inline bool is_end_unify_mark(T p_character) const & { return end_unify_mark == p_character; }
+            inline auto is_start_unify_mark(T p_character) const & { return start_unify_mark == p_character; }
+
+            inline auto is_end_unify_mark(T p_character) const & { return end_unify_mark == p_character; }
+
             inline auto get_start_unify_mark() const & { return start_unify_mark; }
+
             inline auto get_end_unify_mark() const & { return end_unify_mark; }
+
             inline auto get_tag() const & { return tag; }
         };
 
@@ -129,7 +135,7 @@ namespace Kampua
 
         static constexpr const auto NEWLINE = T('\n');
 
-        static auto make_default_unifiers()
+        static inline auto make_default_unifiers()
         {
             return std::vector<Unifier>{
                 Unifier('\'', '\'', Tag::STRING_LITERAL),
@@ -137,7 +143,7 @@ namespace Kampua
                 Unifier('#', '\n', Tag::COMMENT)};
         }
 
-        static auto make_default_kinds()
+        static inline auto make_default_kinds()
         {
             return std::vector<Kind>{
                 Kind(" \t\n\v\f\r", 0, Tag::DEFAULT, Cleave::CleaveOption::OMIT),
@@ -155,15 +161,9 @@ namespace Kampua
     public:
         Cleaver()
             : row(1), column(0), kinds(make_default_kinds()), unifiers(make_default_unifiers()) {}
-        Cleaver(const std::vector<Kind> &p_kinds, const std::vector<Unifier> &p_unifiers)
-            : row(1), column(0), kinds(p_kinds), unifiers(p_unifiers) {}
-        Cleaver(std::vector<Kind> &&p_kinds, std::vector<Unifier> &&p_unifiers)
+
+        Cleaver(std::vector<Kind> p_kinds, std::vector<Unifier> p_unifiers)
             : row(1), column(0), kinds(std::move(p_kinds)), unifiers(std::move(p_unifiers)) {}
-        Cleaver(const Cleaver<T> &p_cleaver)
-            : row(p_cleaver.row), column(p_cleaver.column), kinds(p_cleaver.kinds), unifiers(p_cleaver.unifiers) {}
-        Cleaver(Cleaver<T> &&p_cleaver)
-            : row(p_cleaver.row), column(p_cleaver.column), kinds(std::move(p_cleaver.kinds)), unifiers(std::move(p_cleaver.unifiers)) {}
-        ~Cleaver() = default;
 
         value_type cleave(const T &p_value, Cleave::CleaveChunkSize p_size)
         {
@@ -203,7 +203,7 @@ namespace Kampua
             auto current_kind = std::optional<std::reference_wrapper<const Kind>>(std::nullopt);
             for (const auto &kind : kinds)
             {
-                const auto &characters = kind.borrow_characters();
+                const auto &characters = kind.view_characters();
                 if (characters.find(p_value) != characters.npos)
                 {
                     // Found current kind.

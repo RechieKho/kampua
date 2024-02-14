@@ -39,13 +39,7 @@ namespace AST
         Vessel(std::basic_string<T> p_identifier, std::basic_string<T> p_type, std::vector<bool> p_mutability) noexcept
             : identifier(std::move(p_identifier)), type(std::move(p_type)), mutability(std::move(p_mutability)) {}
 
-        Vessel(const Vessel<T> &p_vessel)
-            : identifier(p_vessel.identifier), type(p_vessel.type), mutability(p_vessel.mutability) {}
-
-        Vessel(Vessel<T> &&p_vessel)
-            : identifier(std::move(p_vessel.identifier)), type(std::move(p_vessel.type)), mutability(std::move(p_vessel.mutability)) {}
-
-        ~Vessel() = default;
+        inline auto operator<=>(const Vessel<T> &p_vessel) const & = default;
 
         inline auto get_pointer_degree() const & noexcept { return mutability.size(); }
 

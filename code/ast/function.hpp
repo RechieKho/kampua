@@ -38,13 +38,9 @@ namespace AST
         Function(FunctionPrototype<T> p_prototype, std::vector<std::unique_ptr<Node>> p_statements) noexcept
             : prototype(std::move(p_prototype)), statements(std::move(p_statements)) {}
 
-        Function(const Function<T> &p_function)
-            : prototype(p_function.prototype), statements(p_function.statements) {}
-
-        Function(Function<T> &&p_function)
-            : prototype(std::move(p_function.prototype)), statements(std::move(p_function.statements)) {}
-
         ~Function() override = default;
+
+        inline auto operator<=>(const Function<T> &p_function) const & = default;
 
         inline const FunctionPrototype<T> &view_prototype() const & noexcept { return prototype; }
 
