@@ -1,5 +1,5 @@
 #include "node.hpp"
 
-using namespace AST;
+using namespace Tree;
 
 Node::~Node() {}

@@ -4,7 +4,7 @@
 /**
  * @file
  *
- * @ingroup AST
+ * @ingroup Tree
  *
  * @brief Abstract syntax node for functions.
  */
@@ -17,7 +17,7 @@
 #include <memory>
 #include <span>
 
-namespace AST
+namespace Tree
 {
 
     //! @brief Function.
@@ -47,6 +47,6 @@ namespace AST
         inline const std::vector<std::unique_ptr<Node>> &view_statements() const & noexcept { return statements; }
     };
 
-} // namespace AST
+} // namespace Tree
 
 #endif // AST_FUNCTION_HPP

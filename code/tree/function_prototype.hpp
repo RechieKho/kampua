@@ -4,7 +4,7 @@
 /**
  * @file
  *
- * @ingroup AST
+ * @ingroup Tree
  *
  * @brief Abstract syntax node for function prototype.
  */
@@ -15,7 +15,7 @@
 
 #include <string>
 
-namespace AST
+namespace Tree
 {
 
     //! @brief Signature of a function.
@@ -44,6 +44,6 @@ namespace AST
         inline const std::vector<Vessel<T>> &view_parameters() const & noexcept { return identifier; }
     };
 
-} // namespace AST
+} // namespace Tree
 
 #endif // AST_FUNCTION_PROTOTYPE_HPP

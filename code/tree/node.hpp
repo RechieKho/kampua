@@ -4,12 +4,12 @@
 /**
  * @file
  *
- * @ingroup AST
+ * @ingroup Tree
  *
  * @brief Base class for node in abstract syntax tree.
  */
 
-namespace AST
+namespace Tree
 {
 
     //! @brief Base class for node in abstract syntax tree.
@@ -19,6 +19,6 @@ namespace AST
         virtual ~Node() = 0;
     };
 
-} // namespace AST
+} // namespace Tree
 
 #endif // AST_ASN_HPP

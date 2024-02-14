@@ -4,7 +4,7 @@
 /**
  * @file
  *
- * @ingroup AST
+ * @ingroup Tree
  *
  * @brief A value holder of given type.
  */
@@ -15,7 +15,7 @@
 #include <vector>
 #include <span>
 
-namespace AST
+namespace Tree
 {
 
     //! @brief A value holder of given type.
@@ -50,6 +50,6 @@ namespace AST
         inline const std::vector<bool> &view_mutability() const & noexcept { return mutability; }
     };
 
-} // namespace AST
+} // namespace Tree
 
 #endif // AST_VESSEL_HPP
