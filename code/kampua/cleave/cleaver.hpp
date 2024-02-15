@@ -260,7 +260,7 @@ namespace Kampua::Cleave
                 std::stringstream message;
                 message << "Unterminated character `" << current_unifier->get().get_end_unify_mark() << "`. " << make_position_description(row, column);
                 // Raise error.
-                throw std::runtime_error(message.str().c_str());
+                throw std::runtime_error(message.str());
             }
 
             return Result(CleaveOption::IGNORE, row, column - p_size, current_kind.has_value() ? current_kind->get().get_tag() : Tag::DEFAULT);

@@ -45,7 +45,7 @@ namespace Tree::Basis
                 std::stringstream message;
                 message << "`" << p_label << "` is not a valid identifier.";
                 // Raise error.
-                throw std::runtime_error(message.str().c_str());
+                throw std::runtime_error(message.str());
             }
 
             label = std::move(p_label);
