@@ -77,6 +77,8 @@ namespace Kampua::Cleave
 
             inline auto get_tag() const & noexcept { return tag; }
 
+            inline auto make_position_description() const & noexcept { return Cleaver<T>::make_position_description(row, column); }
+
             operator CleaveOption() const & noexcept { return cleave_option; }
         };
 
@@ -159,6 +161,13 @@ namespace Kampua::Cleave
                 Kind("()", 1, Tag::PARENTHESIS),
                 Kind("[]", 1, Tag::SQUARE_BRACKET),
                 Kind("{}", 1, Tag::CURLY_BRACKET)};
+        }
+
+        static inline auto make_position_description(PositionType p_row, PositionType p_column)
+        {
+            std::stringstream message;
+            message << "[row: " << p_row << ", column: " << p_column << "]";
+            return message.str();
         }
 
     public:
@@ -249,7 +258,7 @@ namespace Kampua::Cleave
             if (current_unifier.has_value())
             {
                 std::stringstream message;
-                message << "Unterminated character `" << current_unifier->get().get_end_unify_mark() << "` at row " << row << ", column " << column << ".";
+                message << "Unterminated character `" << current_unifier->get().get_end_unify_mark() << "`. " << make_position_description(row, column);
                 // Raise error.
                 throw std::runtime_error(message.str().c_str());
             }
