@@ -33,9 +33,11 @@ namespace Kampua::Cleave
         class Result;
 
         using value_type = Result;
-        using PositionType = typename std::size_t;
+        using PositionType = std::size_t;
         using TagType = uint8_t;
         using CountType = uint8_t;
+        using CleaveOption = ::Cleave::CleaveOption;
+        using CleaveChunkSize = ::Cleave::CleaveChunkSize;
 
         enum Tag : TagType
         {
@@ -58,13 +60,13 @@ namespace Kampua::Cleave
         class Result
         {
         private:
-            ::Cleave::CleaveOption cleave_option;
+            CleaveOption cleave_option;
             PositionType row;
             PositionType column;
             TagType tag;
 
         public:
-            Result(::Cleave::CleaveOption p_cleave_option, PositionType p_row, PositionType p_column, TagType p_tag) noexcept
+            Result(CleaveOption p_cleave_option, PositionType p_row, PositionType p_column, TagType p_tag) noexcept
                 : cleave_option(p_cleave_option), row(p_row), column(p_column), tag(p_tag) {}
 
             inline auto operator<=>(const Result &p_result) const & noexcept = default;
@@ -75,7 +77,7 @@ namespace Kampua::Cleave
 
             inline auto get_tag() const & noexcept { return tag; }
 
-            operator ::Cleave::CleaveOption() const & noexcept { return cleave_option; }
+            operator CleaveOption() const & noexcept { return cleave_option; }
         };
 
         class Kind
@@ -84,10 +86,10 @@ namespace Kampua::Cleave
             std::basic_string<T> characters;
             CountType max_count;
             TagType tag;
-            ::Cleave::CleaveOption cleave_option;
+            CleaveOption cleave_option;
 
         public:
-            Kind(std::basic_string<T> p_characters, CountType p_max_count, TagType p_tag, ::Cleave::CleaveOption p_cleave_option = ::Cleave::CleaveOption::BEFORE) noexcept
+            Kind(std::basic_string<T> p_characters, CountType p_max_count, TagType p_tag, CleaveOption p_cleave_option = CleaveOption::BEFORE) noexcept
                 : characters(std::move(p_characters)), max_count(p_max_count), tag(p_tag), cleave_option(p_cleave_option) {}
 
             inline auto operator<=>(const Kind &p_kind) const & noexcept = default;
@@ -146,7 +148,7 @@ namespace Kampua::Cleave
         static inline auto make_default_kinds()
         {
             return std::vector<Kind>{
-                Kind(" \t\n\v\f\r", 0, Tag::DEFAULT, ::Cleave::CleaveOption::OMIT),
+                Kind(" \t\n\v\f\r", 0, Tag::DEFAULT, CleaveOption::OMIT),
                 Kind(";", 1, Tag::TERMINATE),
                 Kind("+-*/%=!", 2, Tag::GENERIC_OPERATOR),
                 Kind(":", 1, Tag::TYPE_OPERATOR),
@@ -166,7 +168,7 @@ namespace Kampua::Cleave
         Cleaver(std::vector<Kind> p_kinds, std::vector<Unifier> p_unifiers)
             : row(1), column(0), kinds(std::move(p_kinds)), unifiers(std::move(p_unifiers)) {}
 
-        value_type cleave(const T &p_value, ::Cleave::CleaveChunkSize p_size)
+        value_type cleave(const T &p_value, CleaveChunkSize p_size)
         {
             // Check new line.
             if (p_value == NEWLINE)
@@ -185,11 +187,11 @@ namespace Kampua::Cleave
                 {
                     // Stop unifying.
                     current_unifier = std::nullopt;
-                    return Result(::Cleave::CleaveOption::OMIT, row, column - p_size, unifier.get_tag());
+                    return Result(CleaveOption::OMIT, row, column - p_size, unifier.get_tag());
                 }
                 else
                     // Grow.
-                    return Result(::Cleave::CleaveOption::IGNORE, row, column - p_size, Tag::DEFAULT);
+                    return Result(CleaveOption::IGNORE, row, column - p_size, Tag::DEFAULT);
             }
 
             // Check start unifying.
@@ -197,7 +199,7 @@ namespace Kampua::Cleave
                 if (unifier.is_start_unify_mark(p_value))
                 {
                     current_unifier = std::cref(unifier);
-                    return Result(::Cleave::CleaveOption::OMIT, row, column - p_size, current_kind.has_value() ? current_kind->get().get_tag() : Tag::DEFAULT);
+                    return Result(CleaveOption::OMIT, row, column - p_size, current_kind.has_value() ? current_kind->get().get_tag() : Tag::DEFAULT);
                 }
 
             // Determine current kind.
@@ -226,23 +228,23 @@ namespace Kampua::Cleave
                     if (p_size + 1 >= current_kind->get().get_max_count())
                     {
                         const auto tag = previous_kind.has_value() ? previous_kind->get().get_tag() : Tag::DEFAULT;
-                        return Result(::Cleave::CleaveOption::BEFORE, row, column - p_size, tag);
+                        return Result(CleaveOption::BEFORE, row, column - p_size, tag);
                     }
 
                 // Grow.
-                return Result(::Cleave::CleaveOption::IGNORE, row, column - p_size, Tag::DEFAULT);
+                return Result(CleaveOption::IGNORE, row, column - p_size, Tag::DEFAULT);
             }
             else
             {
                 // Switch to new kind.
                 const auto tag = previous_kind.has_value() ? previous_kind->get().get_tag() : Tag::DEFAULT;
-                const auto cleave_option = current_kind.has_value() ? current_kind->get().get_cleave_option() : ::Cleave::CleaveOption::BEFORE;
+                const auto cleave_option = current_kind.has_value() ? current_kind->get().get_cleave_option() : CleaveOption::BEFORE;
                 this->current_kind = std::move(current_kind);
                 return Result(cleave_option, row, column - p_size, tag);
             }
         }
 
-        value_type terminate(::Cleave::CleaveChunkSize p_size)
+        value_type terminate(CleaveChunkSize p_size)
         {
             if (current_unifier.has_value())
             {
@@ -252,7 +254,7 @@ namespace Kampua::Cleave
                 throw std::runtime_error(message.str().c_str());
             }
 
-            return Result(::Cleave::CleaveOption::IGNORE, row, column - p_size, current_kind.has_value() ? current_kind->get().get_tag() : Tag::DEFAULT);
+            return Result(CleaveOption::IGNORE, row, column - p_size, current_kind.has_value() ? current_kind->get().get_tag() : Tag::DEFAULT);
         }
     };
 
