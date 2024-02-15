@@ -18,12 +18,12 @@
 namespace Cleave
 {
 
-    using CleaveOptionType = uint8_t;
+    using CleaveOptionUnderlyingType = uint8_t;
     using CleaveChunkSize = typename std::size_t;
 
     //! @brief Option for `cleave` function returned by cleaver.
     //! @see cleave
-    enum CleaveOption : CleaveOptionType
+    enum CleaveOption : CleaveOptionUnderlyingType
     {
         //! @brief Not cleave.
         IGNORE = 0,
@@ -41,7 +41,7 @@ namespace Cleave
     //! @brief Cleaver object that handles when to cleave object.
     template <typename T, typename E>
     concept Cleaver = ValueTyped<T> &&
-                      std::convertible_to<typename T::value_type, CleaveOptionType> &&
+                      std::convertible_to<typename T::value_type, CleaveOptionUnderlyingType> &&
                       requires(T p_cleaver, const E &p_element, CleaveChunkSize p_size) {
                           {
                               p_cleaver.cleave(p_element, p_size)
@@ -55,7 +55,7 @@ namespace Cleave
     //! @brief Cleave container based on instruction given by cleaver object.
     //! `p_cleaver::cleave(current_element, chunk_size)` will be called on each of the element in the container.
     //! `p_cleaver::terminate(chunk_size)` will be called when it is finished.
-    //! The result of the methods should be able to convert to `CleaveOptionType` to determine how to cleave.
+    //! The result of the methods should be able to convert to `CleaveOptionUnderlyingType` to determine how to cleave.
     //! The result of the methods would append onto each chunk to record user's data describing each chunk.
     //! @tparam T Cleaver type.
     //! @tparam C Container type.
@@ -69,12 +69,12 @@ namespace Cleave
     auto cleave(const C &p_container, T p_cleaver)
     try
     {
-        using ElementType = const typename C::value_type;
-        using CleaverResultType = typename T::value_type;
-        using ViewType = std::tuple<std::span<ElementType>, CleaverResultType>;
-        using OutputType = std::vector<ViewType>;
+        using Element = const typename C::value_type;
+        using CleaverResult = typename T::value_type;
+        using View = std::tuple<std::span<Element>, CleaverResult>;
+        using Output = std::vector<View>;
 
-        auto chunks = OutputType();
+        auto chunks = Output();
         auto start = p_container.cbegin();
 
         // Moving end of span.
@@ -91,8 +91,8 @@ namespace Cleave
             {
                 if (start != i)
                     chunks.push_back(
-                        ViewType(
-                            std::span<ElementType>(start, i),
+                        View(
+                            std::span<Element>(start, i),
                             std::move(result)));
                 start = i;
                 break;
@@ -101,8 +101,8 @@ namespace Cleave
             {
                 if (start != i)
                     chunks.push_back(
-                        ViewType(
-                            std::span<ElementType>(start, i + 1),
+                        View(
+                            std::span<Element>(start, i + 1),
                             std::move(result)));
                 start = i + 1;
                 break;
@@ -111,8 +111,8 @@ namespace Cleave
             {
                 if (start != i)
                     chunks.push_back(
-                        ViewType(
-                            std::span<ElementType>(start, i),
+                        View(
+                            std::span<Element>(start, i),
                             std::move(result)));
 
                 start = i + 1;
@@ -125,8 +125,8 @@ namespace Cleave
         // Record chunk.
         if (start != p_container.cend())
             chunks.push_back(
-                ViewType(
-                    std::span<ElementType>(start, p_container.cend()),
+                View(
+                    std::span<Element>(start, p_container.cend()),
                     std::move(p_cleaver.terminate(start - p_container.cend()))));
 
         return chunks;
