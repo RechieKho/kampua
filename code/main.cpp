@@ -1,18 +1,18 @@
 #include <iostream>
-#include "kampua/cleaver.hpp"
+#include "kampua/cleave/cleaver.hpp"
 
 int main()
 {
 #if true
     auto code = std::basic_string<char>("var something : ^^^T = 'some string.';;;\nvar another_thing := 'sometext'");
-    auto cleaver = Kampua::Cleaver<char>();
+    auto cleaver = Kampua::Cleave::Cleaver<char>();
 
     try
     {
         for (auto chunk : Cleave::cleave(code, cleaver))
         {
             auto view = std::get<std::span<const char>>(chunk);
-            auto data = std::get<Kampua::Cleaver<char>::Result>(chunk);
+            auto data = std::get<Kampua::Cleave::Cleaver<char>::Result>(chunk);
             std::cout << std::basic_string_view<char>(view.begin(), view.end()) << " [row :" << data.get_row() << "; column: " << data.get_column() << "]." << std::endl;
         }
     }
