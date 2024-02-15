@@ -27,6 +27,6 @@ file(GLOB_RECURSE CODE_FILES "${CODE_DIR}/*.cpp")
 
 # Targets.
 add_executable(${PROJECT_NAME} ${CODE_FILES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${LLVM_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${LLVM_INCLUDE_DIRS} ${CODE_DIR})
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${LLVM_DEFINITIONS})
 llvm_config(${PROJECT_NAME} USE_SHARED)

@@ -9,9 +9,9 @@
  * @brief Abstract syntax node for function prototype.
  */
 
-#include "../basis/node.hpp"
-#include "../basis/vessel.hpp"
-#include "../../concepts.hpp"
+#include "tree/basis/node.hpp"
+#include "tree/basis/vessel.hpp"
+#include "concepts.hpp"
 
 #include <string>
 

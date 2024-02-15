@@ -9,7 +9,7 @@
  * @brief Base class for node in abstract syntax tree.
  */
 
-#include "../../concepts.hpp"
+#include "concepts.hpp"
 
 namespace Tree::Basis
 {
