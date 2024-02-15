@@ -10,6 +10,8 @@
  */
 
 #include "concepts.hpp"
+#include "tree/basis/identifier.hpp"
+#include "tree/basis/type.hpp"
 
 #include <string>
 #include <vector>
@@ -27,27 +29,22 @@ namespace Tree::Basis
     {
     private:
         //! @brief Name of the value holder.
-        std::basic_string<T> identifier;
+        Identifier<T> identifier;
 
-        //! @brief Type of the value it holds.
-        std::basic_string<T> type;
-
-        //! @brief Mutability of the holder and its pointed value (if it is a pointer).
-        std::vector<bool> mutability;
+        //! @brief Type of the value holder.
+        Type<T> type;
 
     public:
-        Vessel(std::basic_string<T> p_identifier, std::basic_string<T> p_type, std::vector<bool> p_mutability) noexcept
-            : identifier(std::move(p_identifier)), type(std::move(p_type)), mutability(std::move(p_mutability)) {}
+        Vessel(Identifier<T> p_identifier, Type<T> p_type) noexcept
+            : identifier(std::move(p_identifier)), type(std::move(p_type)) {}
 
-        inline auto operator<=>(const Vessel<T> &p_vessel) const & = default;
+        inline auto operator<=>(const Vessel<T> &p_vessel) const & noexcept = default;
 
         inline auto get_pointer_degree() const & noexcept { return mutability.size(); }
 
-        inline const std::basic_string<T> &view_identifier() const & noexcept { return identifier; }
+        inline const auto &view_identifier() const & noexcept { return identifier; }
 
-        inline const std::basic_string<T> &view_type() const & noexcept { return type; }
-
-        inline const std::vector<bool> &view_mutability() const & noexcept { return mutability; }
+        inline const auto &view_type() const & noexcept { return type; }
     };
 
 } // namespace Tree::Basis

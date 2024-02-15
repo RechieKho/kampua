@@ -42,7 +42,7 @@ namespace Kampua::Cleave
             DEFAULT = 0,
             TERMINATE,
             GENERIC_OPERATOR,
-            ASSIGNMENT_OPERATOR,
+            TYPE_OPERATOR,
             POINTER_OPERATOR,
             ADDRESS_OPERATOR,
             AND_OPERATOR,
@@ -67,15 +67,15 @@ namespace Kampua::Cleave
             Result(::Cleave::CleaveOption p_cleave_option, PositionType p_row, PositionType p_column, TagType p_tag) noexcept
                 : cleave_option(p_cleave_option), row(p_row), column(p_column), tag(p_tag) {}
 
-            inline auto operator<=>(const Result &p_result) const & = default;
+            inline auto operator<=>(const Result &p_result) const & noexcept = default;
 
-            inline auto get_row() const & { return row; }
+            inline auto get_row() const & noexcept { return row; }
 
-            inline auto get_column() const & { return column; }
+            inline auto get_column() const & noexcept { return column; }
 
-            inline auto get_tag() const & { return tag; }
+            inline auto get_tag() const & noexcept { return tag; }
 
-            operator ::Cleave::CleaveOption() const & { return cleave_option; }
+            operator ::Cleave::CleaveOption() const & noexcept { return cleave_option; }
         };
 
         class Kind
@@ -90,15 +90,15 @@ namespace Kampua::Cleave
             Kind(std::basic_string<T> p_characters, CountType p_max_count, TagType p_tag, ::Cleave::CleaveOption p_cleave_option = ::Cleave::CleaveOption::BEFORE) noexcept
                 : characters(std::move(p_characters)), max_count(p_max_count), tag(p_tag), cleave_option(p_cleave_option) {}
 
-            inline auto operator<=>(const Kind &p_kind) const & = default;
+            inline auto operator<=>(const Kind &p_kind) const & noexcept = default;
 
-            inline auto get_max_count() const & { return max_count; }
+            inline auto get_max_count() const & noexcept { return max_count; }
 
-            inline auto get_tag() const & { return tag; }
+            inline auto get_tag() const & noexcept { return tag; }
 
-            inline auto get_cleave_option() const & { return cleave_option; }
+            inline auto get_cleave_option() const & noexcept { return cleave_option; }
 
-            inline const std::basic_string<T> &view_characters() const & { return characters; }
+            inline const std::basic_string<T> &view_characters() const & noexcept { return characters; }
         };
 
         class Unifier
@@ -112,17 +112,17 @@ namespace Kampua::Cleave
             Unifier(T p_start_unify_mark, T p_end_unify_mark, TagType p_tag) noexcept
                 : start_unify_mark(p_start_unify_mark), end_unify_mark(p_end_unify_mark), tag(p_tag) {}
 
-            inline auto operator<=>(const Unifier &p_unifier) const & = default;
+            inline auto operator<=>(const Unifier &p_unifier) const & noexcept = default;
 
-            inline auto is_start_unify_mark(T p_character) const & { return start_unify_mark == p_character; }
+            inline auto is_start_unify_mark(T p_character) const & noexcept { return start_unify_mark == p_character; }
 
-            inline auto is_end_unify_mark(T p_character) const & { return end_unify_mark == p_character; }
+            inline auto is_end_unify_mark(T p_character) const & noexcept { return end_unify_mark == p_character; }
 
-            inline auto get_start_unify_mark() const & { return start_unify_mark; }
+            inline auto get_start_unify_mark() const & noexcept { return start_unify_mark; }
 
-            inline auto get_end_unify_mark() const & { return end_unify_mark; }
+            inline auto get_end_unify_mark() const & noexcept { return end_unify_mark; }
 
-            inline auto get_tag() const & { return tag; }
+            inline auto get_tag() const & noexcept { return tag; }
         };
 
     private:
@@ -148,7 +148,8 @@ namespace Kampua::Cleave
             return std::vector<Kind>{
                 Kind(" \t\n\v\f\r", 0, Tag::DEFAULT, ::Cleave::CleaveOption::OMIT),
                 Kind(";", 1, Tag::TERMINATE),
-                Kind("+-*/%:=!", 2, Tag::GENERIC_OPERATOR),
+                Kind("+-*/%=!", 2, Tag::GENERIC_OPERATOR),
+                Kind(":", 1, Tag::TYPE_OPERATOR),
                 Kind("^", 1, Tag::POINTER_OPERATOR),
                 Kind("@", 1, Tag::ADDRESS_OPERATOR),
                 Kind("&", 2, Tag::AND_OPERATOR),

@@ -43,11 +43,11 @@ namespace Tree::Composite
 
         ~Function() override = default;
 
-        inline auto operator<=>(const Function<T> &p_function) const & = default;
+        inline auto operator<=>(const Function<T> &p_function) const & noexcept = default;
 
-        inline const FunctionPrototype<T> &view_prototype() const & noexcept { return prototype; }
+        inline const auto &view_prototype() const & noexcept { return prototype; }
 
-        inline const std::vector<std::unique_ptr<Node<T>>> &view_statements() const & noexcept { return statements; }
+        inline const auto &view_statements() const & noexcept { return statements; }
     };
 
 } // namespace Tree::Composite

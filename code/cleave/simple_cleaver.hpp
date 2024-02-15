@@ -33,8 +33,6 @@ namespace Cleave
         SimpleCleaver(T &&p_value)
             : value(std::forward<T>(p_value)) {}
 
-        ~SimpleCleaver() = default;
-
         value_type cleave(const T &p_value, CleaveChunkSize p_size) const
         {
             if (p_value == value)
