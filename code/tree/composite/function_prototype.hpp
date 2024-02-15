@@ -1,22 +1,24 @@
-#ifndef AST_FUNCTION_PROTOTYPE_HPP
-#define AST_FUNCTION_PROTOTYPE_HPP
+#ifndef TREE_COMPOSITE_FUNCTION_PROTOTYPE_HPP
+#define TREE_COMPOSITE_FUNCTION_PROTOTYPE_HPP
 
 /**
  * @file
  *
- * @ingroup Tree
+ * @ingroup Tree::Composite
  *
  * @brief Abstract syntax node for function prototype.
  */
 
-#include "node.hpp"
-#include "vessel.hpp"
-#include "../concepts.hpp"
+#include "../basis/node.hpp"
+#include "../basis/vessel.hpp"
+#include "../../concepts.hpp"
 
 #include <string>
 
-namespace Tree
+namespace Tree::Composite
 {
+
+    using namespace Tree::Basis;
 
     //! @brief Signature of a function.
     //! @tparam T Character Type.
@@ -44,6 +46,6 @@ namespace Tree
         inline const std::vector<Vessel<T>> &view_parameters() const & noexcept { return identifier; }
     };
 
-} // namespace Tree
+} // namespace Tree::Composite
 
-#endif // AST_FUNCTION_PROTOTYPE_HPP
+#endif // TREE_COMPOSITE_FUNCTION_PROTOTYPE_HPP

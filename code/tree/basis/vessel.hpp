@@ -1,21 +1,21 @@
-#ifndef AST_VESSEL_HPP
-#define AST_VESSEL_HPP
+#ifndef TREE_BASIS_VESSEL_HPP
+#define TREE_BASIS_VESSEL_HPP
 
 /**
  * @file
  *
- * @ingroup Tree
+ * @ingroup Tree::Basis
  *
  * @brief A value holder of given type.
  */
 
-#include "../concepts.hpp"
+#include "../../concepts.hpp"
 
 #include <string>
 #include <vector>
 #include <span>
 
-namespace Tree
+namespace Tree::Basis
 {
 
     //! @brief A value holder of given type.
@@ -50,6 +50,6 @@ namespace Tree
         inline const std::vector<bool> &view_mutability() const & noexcept { return mutability; }
     };
 
-} // namespace Tree
+} // namespace Tree::Basis
 
-#endif // AST_VESSEL_HPP
+#endif // TREE_BASIS_VESSEL_HPP

@@ -1,24 +1,27 @@
-#ifndef AST_FUNCTION_HPP
-#define AST_FUNCTION_HPP
+#ifndef TREE_COMPOSITE_FUNCTION_HPP
+#define TREE_COMPOSITE_FUNCTION_HPP
 
 /**
  * @file
  *
- * @ingroup Tree
+ * @ingroup Tree::Composite
  *
  * @brief Abstract syntax node for functions.
  */
 
-#include "node.hpp"
+#include "../basis/node.hpp"
+#include "../basis/vessel.hpp"
+#include "../../concepts.hpp"
 #include "function_prototype.hpp"
-#include "../concepts.hpp"
 
 #include <vector>
 #include <memory>
 #include <span>
 
-namespace Tree
+namespace Tree::Composite
 {
+
+    using namespace Tree::Basis;
 
     //! @brief Function.
     //! @tparam T Character Type.
@@ -47,6 +50,6 @@ namespace Tree
         inline const std::vector<std::unique_ptr<Node<T>>> &view_statements() const & noexcept { return statements; }
     };
 
-} // namespace Tree
+} // namespace Tree::Composite
 
-#endif // AST_FUNCTION_HPP
+#endif // TREE_COMPOSITE_FUNCTION_HPP

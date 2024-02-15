@@ -1,17 +1,17 @@
-#ifndef AST_ASN_HPP
-#define AST_ASN_HPP
+#ifndef TREE_BASIS_NODE_HPP
+#define TREE_BASIS_NODE_HPP
 
 /**
  * @file
  *
- * @ingroup Tree
+ * @ingroup Tree::Basis
  *
  * @brief Base class for node in abstract syntax tree.
  */
 
-#include "../concepts.hpp"
+#include "../../concepts.hpp"
 
-namespace Tree
+namespace Tree::Basis
 {
 
     //! @brief Base class for node in abstract syntax tree.
@@ -30,6 +30,6 @@ namespace Tree
     {
     }
 
-} // namespace Tree
+} // namespace Tree::Basis
 
-#endif // AST_ASN_HPP
+#endif // TREE_BASIS_NODE_HPP
