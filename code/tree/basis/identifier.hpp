@@ -29,7 +29,7 @@ namespace Tree::Basis
                 return false;
 
             // Rest should be alphanumeric or underscore.
-            const auto rest = std::basic_string_view<T>(p_label.cbegin() + 1, p_label.cend());
+            const auto rest = std::basic_string_view<T>(std::next(p_label.cbegin()), p_label.cend());
             for (const auto &character : rest)
                 if (!isalnum(character) && character != T('_'))
                     return false;
