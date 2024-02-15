@@ -18,17 +18,17 @@ namespace Tree::Basis
         Identifier<T> identifier;
 
         //! @brief Mutability of the holder and its pointed value (if it is a pointer).
-        std::vector<bool> mutability;
+        std::vector<bool> mutabilities;
 
     public:
-        Type(Identifier<T> p_identifier, std::vector<bool> p_mutability) noexcept
-            : identifier(std::move(p_identifier)), mutability(std::move(p_mutability)) {}
+        Type(Identifier<T> p_identifier, std::vector<bool> p_mutabilities) noexcept
+            : identifier(std::move(p_identifier)), mutabilities(std::move(p_mutabilities)) {}
 
         inline auto operator<=>(const Type<T> &p_type) const & noexcept = default;
 
         inline const auto &view_identifier() const & noexcept { return identifier; }
 
-        inline const auto &view_mutability() const & noexcept { return mutability; }
+        inline const auto &view_mutabilities() const & noexcept { return mutabilities; }
     };
 
 } // namespace Tree::Basis
