@@ -40,8 +40,6 @@ namespace Tree::Basis
 
         inline auto operator<=>(const Vessel<T> &p_vessel) const & noexcept = default;
 
-        inline auto get_pointer_degree() const & noexcept { return mutabilities.size(); }
-
         inline const auto &view_identifier() const & noexcept { return identifier; }
 
         inline const auto &view_type() const & noexcept { return type; }

@@ -24,7 +24,7 @@ namespace Tree::Basis
                 return false;
 
             // First character should only be alphebet or underscore.
-            const auto &first = p_label.first();
+            const auto &first = p_label[0];
             if (!isalpha(first) && first != T('_'))
                 return false;
 
@@ -40,7 +40,7 @@ namespace Tree::Basis
         Identifier(std::basic_string<T> p_label)
             : label()
         {
-            if (!is_valid_identifier(p_label))
+            if (!Identifier<T>::is_valid_identifier(p_label))
             {
                 std::stringstream message;
                 message << "`" << p_label << "` is not a valid identifier.";

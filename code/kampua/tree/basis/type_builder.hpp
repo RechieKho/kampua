@@ -40,7 +40,7 @@ namespace Kampua::Tree::Basis
             const auto default_mutability = false;
             const auto mutability_keyword = std::basic_string<T>("mut");
 
-            const auto &last = p_tokens.last();
+            const auto &last = p_tokens.back();
             const auto rest = std::span<Token<T>>(p_tokens.begin(), std::prev(p_tokens.end()));
 
             // Retrieve mutabilities.
@@ -68,6 +68,8 @@ namespace Kampua::Tree::Basis
                     throw std::runtime_error(message.str());
                 }
             }
+            if (mutability != default_mutability)
+                mutabilities.push_back(mutability);
             std::reverse(mutabilities.begin(), mutabilities.end());
 
             // Retrieve type identifier.

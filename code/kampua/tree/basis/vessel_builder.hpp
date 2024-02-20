@@ -35,7 +35,7 @@ namespace Kampua::Tree::Basis
     public:
     private:
     public:
-        static auto build(std::span<Token> p_tokens)
+        static auto build(std::span<Token<T>> p_tokens)
         try
         {
             // Check tokens availability.
@@ -44,9 +44,9 @@ namespace Kampua::Tree::Basis
 
             // Retrieve identifier.
             const auto &identifier_token = p_tokens[0];
-            const auto &identifier_view = std::get<View>(identifier_token);
-            const auto &identifier_metadata = std::get<Metadata>(identifier_token);
-            auto identifier = IdentifierBuilder<T>::build(std::basic_string<T>(identifier_view.begin(), identifier_view.end()));
+            const auto &identifier_view = std::get<View<T>>(identifier_token);
+            const auto &identifier_metadata = std::get<Metadata<T>>(identifier_token);
+            auto identifier = IdentifierBuilder<T>::build(identifier_token);
 
             // Check type operator availability.
             if (p_tokens.size() == 1)
@@ -58,9 +58,9 @@ namespace Kampua::Tree::Basis
 
             // Check type operator.
             const auto &type_token = p_tokens[1];
-            const auto &type_view = std::get<View>(token_token);
-            const auto &type_metadata = std::get<Metadata>(token_token);
-            if (type_metadata.tag != Tag::TYPE_OPERATOR)
+            const auto &type_view = std::get<View<T>>(type_token);
+            const auto &type_metadata = std::get<Metadata<T>>(type_token);
+            if (type_metadata.get_tag() != Tag<T>::TYPE_OPERATOR)
             {
                 std::stringstream message;
                 message << "Expecting a type operator (`:`) but `" << std::basic_string_view<T>(type_view.begin(), type_view.end()) << "` is given. " << type_metadata.make_position_description();

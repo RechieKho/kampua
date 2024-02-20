@@ -31,7 +31,7 @@ namespace Kampua::Tree::Basis
     //! @tparam T Character type.
     template <typename T>
         requires Character<T>
-    using Token = std::tuple<ViewType<T>, MetadataType<T>>;
+    using Token = std::tuple<View<T>, Metadata<T>>;
 
     //! @brief Token's Tag.
     //! @tparam T Character type.
