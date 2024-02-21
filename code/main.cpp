@@ -1,30 +1,31 @@
 #include <iostream>
 #include <span>
-#include "kampua/cleave/cleaver.hpp"
-#include "kampua/tree/basis/vessel_builder.hpp"
+#include <string>
 
-int main()
-{
-    auto code = std::basic_string<char>("vessel: mut^mut^mut Type");
-    auto cleaver = Kampua::Cleave::Cleaver<char>();
+#include "code_cleaver.hpp"
+#include "vessel.hpp"
 
-    try
-    {
-        auto chunks = Cleave::cleave(code, cleaver);
-        auto vessel = Kampua::Tree::Basis::VesselBuilder<const char>::build(std::span{chunks.begin(), chunks.end()});
+int main() {
+  auto code = std::string("vessel # This is a comment # : ^^mut Type");
+  auto cleaver = CodeCleaver();
 
-#if false
-        for (auto chunk : Cleave::cleave(code, cleaver))
-        {
-            auto view = std::get<std::span<const char>>(chunk);
-            auto data = std::get<Kampua::Cleave::Cleaver<char>::Result>(chunk);
-            std::cout << std::basic_string_view<char>(view.begin(), view.end()) << " [row :" << data.get_row() << "; column: " << data.get_column() << "]." << std::endl;
-        }
+  try {
+#if true
+    auto entries = cleaver(code);
+    for (const auto& entry : entries) {
+      auto chunk = std::get<CodeCleaver::chunk_type>(entry);
+      auto result = std::get<CodeCleaver::result_type>(entry);
+      std::cout << std::string(chunk.begin(), chunk.end()) << " "
+                << make_position_description(result.get_row(),
+                                             result.get_column())
+                << std::endl;
+    }
+    auto vessel = Vessel::from(
+        Vessel::slice_type<Vessel::entry_type>(entries.begin(), entries.end()));
+    std::cout << vessel.view_identifier().get() << std::endl;
 #endif
-    }
-    catch (std::runtime_error e)
-    {
-        std::cout << "Error: " << e.what() << std::endl;
-    }
-    return 0;
+  } catch (std::runtime_error e) {
+    std::cout << "Error: " << e.what() << std::endl;
+  }
+  return 0;
 }
