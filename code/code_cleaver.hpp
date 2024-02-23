@@ -149,6 +149,10 @@ class CodeCleaver : public Cleaver<std::string, CodeCleaverResult> {
   };
 
  private:
+  static const value_type NEWLINE;
+  static const list_type<Unifier> DEFAULT_UNIFIERS;
+  static const list_type<Kind> DEFAULT_KINDS;
+
   position_type row;
   position_type column;
   list_type<Kind> kinds;
@@ -156,25 +160,14 @@ class CodeCleaver : public Cleaver<std::string, CodeCleaverResult> {
   optional_type<reference_type<const Kind>> current_kind;
   optional_type<reference_type<const Unifier>> current_unifier;
 
-  static constexpr const auto NEWLINE = value_type('\n');
-
-  static list_type<Unifier> make_default_unifiers();
-
-  static list_type<Kind> make_default_kinds();
-
   result_type process(const value_type &p_value,
                       chunk_size_type p_size) override;
 
   result_type terminate(chunk_size_type p_size) override;
 
  public:
-  inline CodeCleaver()
-      : row(1),
-        column(0),
-        kinds(make_default_kinds()),
-        unifiers(make_default_unifiers()) {}
-
-  inline CodeCleaver(list_type<Kind> p_kinds, list_type<Unifier> p_unifiers)
+  inline CodeCleaver(list_type<Kind> p_kinds = DEFAULT_KINDS,
+                     list_type<Unifier> p_unifiers = DEFAULT_UNIFIERS)
       : row(1),
         column(0),
         kinds(std::move(p_kinds)),

@@ -1,28 +1,28 @@
 #include "code_cleaver.hpp"
 
-std::vector<CodeCleaver::Unifier> CodeCleaver::make_default_unifiers() {
-  return std::vector<Unifier>{
-      Unifier('\'', '\'', CodeTag::STRING_LITERAL),
-      Unifier('\"', '\"', CodeTag::STRING_LITERAL),
-      Unifier('#', '#', CodeTag::COMMENT,
-              CleaverOption::CLEAVE | CleaverOption::SKIP)};
-}
+const CodeCleaver::value_type CodeCleaver::NEWLINE =
+    CodeCleaver::value_type('\n');
 
-std::vector<CodeCleaver::Kind> CodeCleaver::make_default_kinds() {
-  return std::vector<Kind>{
-      Kind(container_type(" \t\n\v\f\r"), -1, CodeTag::WORD,
-           CleaverOption::CLEAVE),
-      Kind(container_type(";"), 1, CodeTag::TERMINATE),
-      Kind(container_type("+-*/%=!"), 2, CodeTag::GENERIC_OPERATOR),
-      Kind(container_type(":"), 1, CodeTag::TYPE_OPERATOR),
-      Kind(container_type("^"), 1, CodeTag::POINTER_OPERATOR),
-      Kind(container_type("@"), 1, CodeTag::ADDRESS_OPERATOR),
-      Kind(container_type("&"), 2, CodeTag::AND_OPERATOR),
-      Kind(container_type("|"), 2, CodeTag::OR_OPERATOR),
-      Kind(container_type("()"), 1, CodeTag::PARENTHESIS),
-      Kind(container_type("[]"), 1, CodeTag::SQUARE_BRACKET),
-      Kind(container_type("{}"), 1, CodeTag::CURLY_BRACE)};
-}
+const std::vector<CodeCleaver::Unifier> CodeCleaver::DEFAULT_UNIFIERS =
+    std::vector<Unifier>{Unifier('\'', '\'', CodeTag::STRING_LITERAL),
+                         Unifier('\"', '\"', CodeTag::STRING_LITERAL),
+                         Unifier('#', '#', CodeTag::COMMENT,
+                                 CleaverOption::CLEAVE | CleaverOption::SKIP)};
+
+const std::vector<CodeCleaver::Kind> CodeCleaver::DEFAULT_KINDS =
+    std::vector<Kind>{
+        Kind(container_type(" \t\n\v\f\r"), -1, CodeTag::WORD,
+             CleaverOption::CLEAVE),
+        Kind(container_type(";"), 1, CodeTag::TERMINATE),
+        Kind(container_type("+-*/%=!"), 2, CodeTag::GENERIC_OPERATOR),
+        Kind(container_type(":"), 1, CodeTag::TYPE_OPERATOR),
+        Kind(container_type("^"), 1, CodeTag::POINTER_OPERATOR),
+        Kind(container_type("@"), 1, CodeTag::ADDRESS_OPERATOR),
+        Kind(container_type("&"), 2, CodeTag::AND_OPERATOR),
+        Kind(container_type("|"), 2, CodeTag::OR_OPERATOR),
+        Kind(container_type("()"), 1, CodeTag::PARENTHESIS),
+        Kind(container_type("[]"), 1, CodeTag::SQUARE_BRACKET),
+        Kind(container_type("{}"), 1, CodeTag::CURLY_BRACE)};
 
 CodeCleaver::result_type CodeCleaver::process(const value_type &p_value,
                                               chunk_size_type p_size) {
