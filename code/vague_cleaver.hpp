@@ -1,14 +1,14 @@
-#ifndef SIMPLE_CLEAVER_HPP
-#define SIMPLE_CLEAVER_HPP
+#ifndef VAGUE_CLEAVER_HPP
+#define VAGUE_CLEAVER_HPP
 
 #include "cleaver.hpp"
 
 template <Cleavable T>
-class SimpleCleaver : public Cleaver<T, CleaverOption> {
+class VagueCleaver : public Cleaver<T, cleaver_option_underlying_type> {
  public:
  private:
   T value;
-  CleaverOption option;
+  cleaver_option_underlying_type option;
 
   result_type process(const value_type &p_value, chunk_type p_chunk) override {
     if (p_value == value)
@@ -22,9 +22,10 @@ class SimpleCleaver : public Cleaver<T, CleaverOption> {
   }
 
  public:
-  inline SimpleCleaver(value_type &&p_value,
-                       CleaverOption p_option = CleaverOption::DISCARD)
+  inline VagueCleaver(value_type &&p_value,
+                      cleaver_option_underlying_type p_option =
+                          CleaverOption::CLEAVE || CleaverOption::SKIP)
       : value(std::forward<value_type>(p_value)), option(p_option) noexcept {}
 };
 
-#endif  // SIMPLE_CLEAVER_HPP
+#endif  // VAGUE_CLEAVER_HPP
