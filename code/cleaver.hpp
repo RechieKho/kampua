@@ -33,13 +33,12 @@ class Cleaver {
   using result_type = R;
   using chunk_type = std::span<value_type>;
   using entry_type = std::tuple<chunk_type, result_type>;
-  using chunk_size_type = std::size_t;
 
- private:
+ protected:
   virtual result_type process(const value_type &p_element,
-                              chunk_size_type p_size) = 0;
+                              chunk_type p_chunk) = 0;
 
-  virtual result_type terminate(chunk_size_type p_size) = 0;
+  virtual result_type terminate(chunk_type p_chunk) = 0;
 
  public:
   virtual ~Cleaver() = 0;
@@ -51,7 +50,7 @@ class Cleaver {
     // Moving end of span.
     for (auto i = p_container.begin(); i != p_container.end(); i++) {
       auto current = *i;
-      auto result = process(current, i - start);
+      auto result = process(current, chunk_type(start, i));
       auto option = cleaver_option_underlying_type(result);
 
       // Record chunk.
@@ -73,9 +72,10 @@ class Cleaver {
 
     // Record chunk.
     const auto end = p_container.end();
-    if (start != end)
-      chunks.push_back(entry_type(chunk_type(start, end),
-                                  std::move(terminate(start - end))));
+    if (start != end) {
+      const auto chunk = chunk_type(start, end);
+      chunks.push_back(entry_type(chunk, std::move(terminate(chunk))));
+    }
 
     return chunks;
   } catch (...) {

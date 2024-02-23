@@ -16,9 +16,7 @@ int main() {
       auto chunk = std::get<CodeCleaver::chunk_type>(entry);
       auto result = std::get<CodeCleaver::result_type>(entry);
       std::cout << std::string(chunk.begin(), chunk.end()) << " "
-                << make_position_description(result.get_row(),
-                                             result.get_column())
-                << std::endl;
+                << result.describe() << std::endl;
     }
     auto vessel = Vessel::from(
         Vessel::slice_type<Vessel::entry_type>(entries.begin(), entries.end()));

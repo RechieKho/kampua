@@ -25,6 +25,8 @@ class Sort {
 
   static constexpr const auto MUTABILITY_KEYWORD = string_slice_type("mut");
 
+  static constexpr const auto POINTER_KEYWORD = string_slice_type("^");
+
  private:
   Identifier identifier;
   list_type<bool> mutabilities;

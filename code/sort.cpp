@@ -15,18 +15,19 @@ Sort Sort::from(const slice_type<entry_type> &p_entries) {
   auto mutabilities = list_type<bool>();
   auto mutability = false;
   for (const auto &token : rest) {
-    const auto &view = std::get<chunk_type>(token);
+    const auto &chunk = std::get<chunk_type>(token);
     const auto &result = std::get<result_type>(token);
-    const auto string_view = string_slice_type(view.begin(), view.end());
+    const auto chunk_string_view =
+        string_slice_type(chunk.begin(), chunk.end());
 
-    if (result.get_tag() == CodeTag::POINTER_OPERATOR) {
+    if (chunk_string_view == POINTER_KEYWORD) {
       mutabilities.push_back(mutability);
       mutability = DEFAULT_MUTABILITY;
-    } else if (string_view == MUTABILITY_KEYWORD) {
+    } else if (chunk_string_view == MUTABILITY_KEYWORD) {
       mutability = !DEFAULT_MUTABILITY;
     } else {
       std::stringstream message;
-      message << "Unexpected keyword `" << string_view
+      message << "Unexpected keyword `" << chunk_string_view
               << "` during type definition. " << result;
       throw std::runtime_error(message.str());
     }

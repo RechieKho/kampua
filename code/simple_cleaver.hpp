@@ -10,15 +10,14 @@ class SimpleCleaver : public Cleaver<T, CleaverOption> {
   T value;
   CleaverOption option;
 
-  result_type process(const value_type &p_value,
-                      chunk_size_type p_size) override {
+  result_type process(const value_type &p_value, chunk_type p_chunk) override {
     if (p_value == value)
       return option;
     else
       return CleaverOption::IGNORE;
   }
 
-  result_type terminate(chunk_size_type p_size) override {
+  result_type terminate(chunk_type p_chunk) override {
     return CleaverOption::IGNORE;
   }
 

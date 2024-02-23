@@ -1,8 +1,8 @@
 #include "identifier.hpp"
 
 Identifier Identifier::from(const entry_type &p_entry) try {
-  const auto &view = std::get<chunk_type>(p_entry);
-  return Identifier(string_type(view.begin(), view.end()));
+  const auto &chunk = std::get<chunk_type>(p_entry);
+  return Identifier(string_type(chunk.begin(), chunk.end()));
 } catch (const std::exception &e) {
   auto message = std::stringstream();
   const auto &result = std::get<result_type>(p_entry);
