@@ -13,34 +13,32 @@ Vessel Vessel::from(const slice_type<entry_type> &p_entries) try {
 
   // Check type operator availability.
   if (p_entries.size() == 1) {
-    std::stringstream message;
-    const auto &result = std::get<attribute_type>(identifier_entry);
-    message << "Expecting a type operator (`:`). " << std::to_string(result);
-    throw std::runtime_error(message.str());
+    const auto &attribute = std::get<attribute_type>(identifier_entry);
+    throw std::runtime_error(std::string() + "Expecting a type operator (`" +
+                             TYPE_OPERATOR + "`). " + attribute.describe());
   }
 
   // Check type operator.
-  const auto &type_entry = p_entries[1];
-  const auto &type_chunk = std::get<chunk_type>(type_entry);
-  const auto &type_result = std::get<attribute_type>(type_entry);
-  const auto type_chunk_string_view =
-      std::string_view(type_chunk.begin(), type_chunk.end());
-  if (type_chunk_string_view != ":") {
-    std::stringstream message;
-    message << "Expecting a type operator (`:`) but `"
-            << string_slice_type(type_chunk.begin(), type_chunk.end())
-            << "` is given. " << std::to_string(type_result);
-    throw std::runtime_error(message.str());
+  const auto &type_operator_entry = p_entries[1];
+  const auto &type_operator_chunk = std::get<chunk_type>(type_operator_entry);
+  const auto &type_operator_attribute =
+      std::get<attribute_type>(type_operator_entry);
+  const auto type_operator_chunk_string_slice =
+      string_slice_type(type_operator_chunk.begin(), type_operator_chunk.end());
+  if (type_operator_chunk_string_slice != TYPE_OPERATOR) {
+    throw std::runtime_error(std::string() + "Expecting a type operator (`" +
+                             TYPE_OPERATOR + "`) but `" +
+                             type_operator_chunk_string_slice + "` is given. " +
+                             type_operator_attribute.describe());
   }
 
   // Check type availability.
   if (p_entries.size() <= 2) {
-    std::stringstream message;
-    message << "Expecting a type. " << std::to_string(type_result);
-    throw std::runtime_error(message.str());
+    throw std::runtime_error(std::string() + "Expecting a type. " +
+                             type_operator_attribute.describe());
   }
 
-  // Retrieve type.
+  // Retrieve sort.
   auto sort = Sort::from(p_entries.subspan(3));
 
   return Vessel(std::move(identifier), std::move(sort));

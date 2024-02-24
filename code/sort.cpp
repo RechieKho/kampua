@@ -16,20 +16,19 @@ Sort Sort::from(const slice_type<entry_type> &p_entries) {
   auto mutability = false;
   for (const auto &token : rest) {
     const auto &chunk = std::get<chunk_type>(token);
-    const auto &result = std::get<attribute_type>(token);
-    const auto chunk_string_view =
+    const auto &attribute = std::get<attribute_type>(token);
+    const auto chunk_string_slice =
         string_slice_type(chunk.begin(), chunk.end());
 
-    if (chunk_string_view == POINTER_KEYWORD) {
+    if (chunk_string_slice == POINTER_KEYWORD) {
       mutabilities.push_back(mutability);
       mutability = DEFAULT_MUTABILITY;
-    } else if (chunk_string_view == MUTABILITY_KEYWORD) {
+    } else if (chunk_string_slice == MUTABILITY_KEYWORD) {
       mutability = !DEFAULT_MUTABILITY;
     } else {
-      std::stringstream message;
-      message << "Unexpected keyword `" << chunk_string_view
-              << "` during type definition. " << result;
-      throw std::runtime_error(message.str());
+      throw std::runtime_error(
+          std::string() + "Unexpected keyword `" + chunk_string_slice +
+          "` during type definition. " + attribute.describe());
     }
   }
   mutabilities.push_back(mutability);

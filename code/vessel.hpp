@@ -20,6 +20,8 @@ class Vessel {
   using slice_type = std::span<T>;
   using string_slice_type = std::basic_string_view<char_type>;
 
+  static constexpr const auto TYPE_OPERATOR = string_slice_type(":");
+
  private:
   Identifier identifier;
   Sort sort;
