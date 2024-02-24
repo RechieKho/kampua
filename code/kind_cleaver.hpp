@@ -21,7 +21,7 @@ class KindCleaver : public Cleaver<T, R> {
   using base_type = Cleaver<T, R>;
   using container_type = base_type::container_type;
   using value_type = base_type::value_type;
-  using result_type = base_type::result_type;
+  using attribute_type = base_type::attribute_type;
   using chunk_type = base_type::chunk_type;
 
   class Kind {
@@ -91,10 +91,11 @@ class KindCleaver : public Cleaver<T, R> {
   optional_type<reference_type<const Unifier>> current_unifier;
 
  protected:
-  virtual result_type make_result(cleaver_option_underlying_type p_option,
-                                  chunk_type p_chunk) = 0;
+  virtual attribute_type make_result(cleaver_option_underlying_type p_option,
+                                     chunk_type p_chunk) = 0;
 
-  result_type process(const value_type &p_value, chunk_type p_chunk) override {
+  attribute_type process(const value_type &p_value,
+                         chunk_type p_chunk) override {
     // Check unifying.
     if (current_unifier.has_value()) {
       const auto &unifier = current_unifier->get();
@@ -156,7 +157,7 @@ class KindCleaver : public Cleaver<T, R> {
     }
   }
 
-  result_type terminate(chunk_type p_chunk) override {
+  attribute_type terminate(chunk_type p_chunk) override {
     if (current_unifier.has_value()) {
       std::stringstream message;
       message << "Unterminated unifier `"

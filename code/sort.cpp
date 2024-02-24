@@ -16,7 +16,7 @@ Sort Sort::from(const slice_type<entry_type> &p_entries) {
   auto mutability = false;
   for (const auto &token : rest) {
     const auto &chunk = std::get<chunk_type>(token);
-    const auto &result = std::get<result_type>(token);
+    const auto &result = std::get<attribute_type>(token);
     const auto chunk_string_view =
         string_slice_type(chunk.begin(), chunk.end());
 

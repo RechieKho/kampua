@@ -8,8 +8,8 @@ class VagueKindCleaver : public KindCleaver<T, cleaver_option_underlying_type> {
  public:
  private:
  public:
-  result_type make_result(cleaver_option_underlying_type p_option,
-                          chunk_type p_chunk) override {
+  attribute_type make_result(cleaver_option_underlying_type p_option,
+                             chunk_type p_chunk) override {
     return p_option;
   }
 };

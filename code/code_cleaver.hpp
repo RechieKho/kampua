@@ -62,12 +62,13 @@ class CodeCleaver : public KindCleaver<std::string, CodeCleaverResult> {
   CodePosition position;
 
  protected:
-  result_type make_result(cleaver_option_underlying_type p_option,
-                          chunk_type p_chunk) override;
+  attribute_type make_result(cleaver_option_underlying_type p_option,
+                             chunk_type p_chunk) override;
 
-  result_type process(const value_type& p_value, chunk_type p_chunk) override;
+  attribute_type process(const value_type& p_value,
+                         chunk_type p_chunk) override;
 
-  result_type terminate(chunk_type p_chunk) override;
+  attribute_type terminate(chunk_type p_chunk) override;
 
  public:
   inline CodeCleaver(list_type<Kind> p_kinds = DEFAULT_KINDS,

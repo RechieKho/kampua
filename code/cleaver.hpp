@@ -30,15 +30,15 @@ class Cleaver {
  public:
   using container_type = T;
   using value_type = T::value_type;
-  using result_type = R;
+  using attribute_type = R;
   using chunk_type = std::span<value_type>;
-  using entry_type = std::tuple<chunk_type, result_type>;
+  using entry_type = std::tuple<chunk_type, attribute_type>;
 
  protected:
-  virtual result_type process(const value_type &p_element,
-                              chunk_type p_chunk) = 0;
+  virtual attribute_type process(const value_type &p_element,
+                                 chunk_type p_chunk) = 0;
 
-  virtual result_type terminate(chunk_type p_chunk) = 0;
+  virtual attribute_type terminate(chunk_type p_chunk) = 0;
 
  public:
   virtual ~Cleaver() = 0;

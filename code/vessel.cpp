@@ -14,7 +14,7 @@ Vessel Vessel::from(const slice_type<entry_type> &p_entries) try {
   // Check type operator availability.
   if (p_entries.size() == 1) {
     std::stringstream message;
-    const auto &result = std::get<result_type>(identifier_entry);
+    const auto &result = std::get<attribute_type>(identifier_entry);
     message << "Expecting a type operator (`:`). " << std::to_string(result);
     throw std::runtime_error(message.str());
   }
@@ -22,7 +22,7 @@ Vessel Vessel::from(const slice_type<entry_type> &p_entries) try {
   // Check type operator.
   const auto &type_entry = p_entries[1];
   const auto &type_chunk = std::get<chunk_type>(type_entry);
-  const auto &type_result = std::get<result_type>(type_entry);
+  const auto &type_result = std::get<attribute_type>(type_entry);
   const auto type_chunk_string_view =
       std::string_view(type_chunk.begin(), type_chunk.end());
   if (type_chunk_string_view != ":") {

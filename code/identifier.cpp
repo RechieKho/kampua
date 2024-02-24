@@ -5,7 +5,7 @@ Identifier Identifier::from(const entry_type &p_entry) try {
   return Identifier(string_type(chunk.begin(), chunk.end()));
 } catch (const std::exception &e) {
   auto message = std::stringstream();
-  const auto &result = std::get<result_type>(p_entry);
+  const auto &result = std::get<attribute_type>(p_entry);
   message << e.what() << " " << result;
   throw std::runtime_error(message.str());
 }

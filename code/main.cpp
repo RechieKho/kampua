@@ -14,7 +14,7 @@ int main() {
     auto entries = cleaver(code);
     for (const auto& entry : entries) {
       auto chunk = std::get<CodeCleaver::chunk_type>(entry);
-      auto result = std::get<CodeCleaver::result_type>(entry);
+      auto result = std::get<CodeCleaver::attribute_type>(entry);
       std::cout << std::string(chunk.begin(), chunk.end()) << " "
                 << result.describe() << std::endl;
     }

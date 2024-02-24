@@ -10,7 +10,7 @@ class Vessel {
  public:
   using string_type = CodeCleaver::container_type;
   using entry_type = CodeCleaver::entry_type;
-  using result_type = CodeCleaver::result_type;
+  using attribute_type = CodeCleaver::attribute_type;
   using char_type = CodeCleaver::value_type;
   using chunk_type = CodeCleaver::chunk_type;
 

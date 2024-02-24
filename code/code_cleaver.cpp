@@ -22,14 +22,14 @@ const std::vector<CodeCleaver::Kind> CodeCleaver::DEFAULT_KINDS =
         Kind(container_type("[]"), 1),
         Kind(container_type("{}"), 1)};
 
-CodeCleaver::result_type CodeCleaver::make_result(
+CodeCleaver::attribute_type CodeCleaver::make_result(
     cleaver_option_underlying_type p_option, chunk_type p_chunk) {
-  return result_type(
+  return attribute_type(
       p_option, CodePosition(position.row, position.column - p_chunk.size()));
 }
 
-CodeCleaver::result_type CodeCleaver::process(const value_type& p_value,
-                                              chunk_type p_chunk) {
+CodeCleaver::attribute_type CodeCleaver::process(const value_type& p_value,
+                                                 chunk_type p_chunk) {
   const auto result = base_type::process(p_value, p_chunk);
   position.column += 1;
   if (p_value == NEWLINE) {
@@ -39,7 +39,7 @@ CodeCleaver::result_type CodeCleaver::process(const value_type& p_value,
   return result;
 }
 
-CodeCleaver::result_type CodeCleaver::terminate(chunk_type p_chunk) {
+CodeCleaver::attribute_type CodeCleaver::terminate(chunk_type p_chunk) {
   const auto result = base_type::terminate(p_chunk);
   position = CodePosition();
   return result;
