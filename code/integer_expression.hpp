@@ -12,7 +12,7 @@ class IntegerExpression : public Expression {
   using attribute_type = CodeCleaver::attribute_type;
   using entry_type = CodeCleaver::entry_type;
 
-  using value_type = int64_t;
+  using value_type = uint64_t;
   using string_slice_type = std::basic_string_view<char_type>;
 
  private:
