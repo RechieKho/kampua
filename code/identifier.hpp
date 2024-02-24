@@ -32,7 +32,7 @@ class Identifier {
   inline auto operator<=>(const Identifier &p_identifier) const & noexcept =
       default;
 
-  inline const auto &get() const & noexcept { return label; }
+  inline const auto &view() const & noexcept { return label; }
 };
 
 #endif  // IDENTIFIER_HPP

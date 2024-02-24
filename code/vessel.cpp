@@ -15,7 +15,8 @@ Vessel Vessel::from(const slice_type<entry_type> &p_entries) try {
   if (p_entries.size() == 1) {
     const auto &attribute = std::get<attribute_type>(identifier_entry);
     throw std::runtime_error(std::string() + "Expecting a type operator (`" +
-                             TYPE_OPERATOR + "`). " + attribute.describe());
+                             std::string(TYPE_OPERATOR) + "`). " +
+                             attribute.describe());
   }
 
   // Check type operator.
@@ -27,8 +28,9 @@ Vessel Vessel::from(const slice_type<entry_type> &p_entries) try {
       string_slice_type(type_operator_chunk.begin(), type_operator_chunk.end());
   if (type_operator_chunk_string_slice != TYPE_OPERATOR) {
     throw std::runtime_error(std::string() + "Expecting a type operator (`" +
-                             TYPE_OPERATOR + "`) but `" +
-                             type_operator_chunk_string_slice + "` is given. " +
+                             std::string(TYPE_OPERATOR) + "`) but `" +
+                             std::string(type_operator_chunk_string_slice) +
+                             "` is given. " +
                              type_operator_attribute.describe());
   }
 

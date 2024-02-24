@@ -20,7 +20,7 @@ int main() {
     }
     auto vessel = Vessel::from(
         Vessel::slice_type<Vessel::entry_type>(entries.begin(), entries.end()));
-    std::cout << vessel.view_identifier().get() << std::endl;
+    std::cout << vessel.view_identifier().view() << std::endl;
 #endif
   } catch (std::runtime_error e) {
     std::cout << "Error: " << e.what() << std::endl;

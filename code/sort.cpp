@@ -26,9 +26,10 @@ Sort Sort::from(const slice_type<entry_type> &p_entries) {
     } else if (chunk_string_slice == MUTABILITY_KEYWORD) {
       mutability = !DEFAULT_MUTABILITY;
     } else {
-      throw std::runtime_error(
-          std::string() + "Unexpected keyword `" + chunk_string_slice +
-          "` during type definition. " + attribute.describe());
+      throw std::runtime_error(std::string() + "Unexpected keyword `" +
+                               std::string(chunk_string_slice) +
+                               "` during type definition. " +
+                               attribute.describe());
     }
   }
   mutabilities.push_back(mutability);
