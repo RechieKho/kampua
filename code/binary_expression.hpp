@@ -2,31 +2,32 @@
 #define BINARY_EXPRESSION_HPP
 
 #include <memory>
+#include <string>
 
 #include "code_cleaver.hpp"
 #include "expression.hpp"
 
 class BinaryExpression : public Expression {
  public:
-  using handler_type = CodeCleaver::value_type;
-  using argument_type = std::unique_ptr<Expression>;
-
  private:
-  handler_type handler;
-  argument_type left_argument;
-  argument_type right_argument;
+  operator_type handler;
+  object_type left_argument;
+  object_type right_argument;
 
  public:
-  inline BinaryExpression(handler_type p_handler, argument_type p_left_argument,
-                          argument_type p_right_argument) noexcept
+  inline BinaryExpression(operator_type p_handler, object_type p_left_argument,
+                          object_type p_right_argument) noexcept
       : handler(p_handler),
         left_argument(std::move(p_left_argument)),
         right_argument(std::move(p_right_argument)) {}
 
-  inline bool operator==(const BinaryExpression& p_expression) const& noexcept =
-      default;
+  ~BinaryExpression() override;
 
-  inline auto get_handler() const& noexcept { return handler; }
+  string_type as_string() const& noexcept override;
+
+  bool could_be_operator() const& noexcept override;
+
+  inline const auto& view_handler() const& noexcept { return handler; }
 
   inline const auto& view_left_argument() const& noexcept {
     return left_argument;
@@ -35,6 +36,6 @@ class BinaryExpression : public Expression {
   inline const auto& view_right_argument() const& noexcept {
     return right_argument;
   }
-}
+};
 
 #endif  // BINARY_EXPRESSION_HPP

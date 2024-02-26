@@ -21,8 +21,11 @@ class IdentifierExpression : public Expression {
   inline IdentifierExpression(value_type p_value) noexcept
       : value(std::move(p_value)) {}
 
-  inline auto operator<=>(
-      const IdentifierExpression& p_expression) const& noexcept = default;
+  ~IdentifierExpression() override;
+
+  string_type as_string() const& noexcept override;
+
+  bool could_be_operator() const& noexcept override;
 
   inline const auto& view() const& noexcept { return value; }
 };

@@ -11,18 +11,19 @@
 template <typename T, typename R>
 class KindCleaver : public Cleaver<T, R> {
  public:
+  using base_type = Cleaver<T, R>;
+  using container_type = base_type::container_type;
+  using value_type = base_type::value_type;
+  using attribute_type = base_type::attribute_type;
+  using chunk_type = base_type::chunk_type;
+
   template <typename U>
   using list_type = std::vector<U>;
   template <typename U>
   using reference_type = std::reference_wrapper<U>;
   template <typename U>
   using optional_type = std::optional<U>;
-
-  using base_type = Cleaver<T, R>;
-  using container_type = base_type::container_type;
-  using value_type = base_type::value_type;
-  using attribute_type = base_type::attribute_type;
-  using chunk_type = base_type::chunk_type;
+  using unifier_nesting_count_type = std::size_t;
 
   class Kind {
    public:
@@ -89,6 +90,7 @@ class KindCleaver : public Cleaver<T, R> {
   list_type<Unifier> unifiers;
   optional_type<reference_type<const Kind>> current_kind;
   optional_type<reference_type<const Unifier>> current_unifier;
+  unifier_nesting_count_type unifier_nesting_count;
 
  protected:
   virtual attribute_type make_result(cleaver_option_underlying_type p_option,
@@ -101,9 +103,19 @@ class KindCleaver : public Cleaver<T, R> {
       const auto &unifier = current_unifier->get();
       // Check stop unifying.
       if (unifier.is_end_unify_mark(p_value)) {
-        // Stop unifying.
-        current_unifier = std::nullopt;
-        return make_result(unifier.get_option() | CleaverOption::SKIP, p_chunk);
+        // Decrease nesting count.
+        unifier_nesting_count--;
+        // Check not nested.
+        if (unifier_nesting_count == 0) {
+          // Stop unifying.
+          current_unifier = std::nullopt;
+          return make_result(unifier.get_option() | CleaverOption::SKIP,
+                             p_chunk);
+        }
+      }
+      // Check nesting.
+      else if (unifier.is_start_unify_mark(p_value)) {
+        unifier_nesting_count++;
       } else
         // Grow.
         return make_result(CleaverOption::IGNORE, p_chunk);
@@ -116,6 +128,7 @@ class KindCleaver : public Cleaver<T, R> {
                                 ? current_kind->get().get_option()
                                 : CleaverOption::CLEAVE | CleaverOption::RECORD;
         current_unifier = std::as_const(unifier);
+        unifier_nesting_count++;
         return make_result(option | CleaverOption::SKIP, p_chunk);
       }
 
@@ -174,7 +187,8 @@ class KindCleaver : public Cleaver<T, R> {
       : kinds(std::move(p_kinds)),
         unifiers(std::move(p_unifiers)),
         current_kind(std::nullopt),
-        current_unifier(std::nullopt) {}
+        current_unifier(std::nullopt),
+        unifier_nesting_count(0) {}
 };
 
 #endif  // KIND_CLEAVER_HPP

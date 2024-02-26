@@ -2,30 +2,31 @@
 #define UNARY_EXPRESSION_HPP
 
 #include <memory>
+#include <string>
 
 #include "code_cleaver.hpp"
 #include "expression.hpp"
 
 class UnaryExpression : public Expression {
  public:
-  using handler_type = CodeCleaver::value_type;
-  using argument_type = std::unique_ptr<Expression>;
-
  private:
-  handler_type handler;
-  argument_type argument;
+  operator_type handler;
+  object_type argument;
 
  public:
-  inline UnaryExpression(handler_type p_handler,
-                         argument_type p_argument) noexcept
+  inline UnaryExpression(operator_type p_handler,
+                         object_type p_argument) noexcept
       : handler(p_handler), argument(std::move(p_argument)) {}
 
-  inline bool operator==(const UnaryExpression& p_expression) const& noexcept =
-      default;
+  ~UnaryExpression() override;
 
-  inline auto get_handler() const& noexcept { return handler; }
+  string_type as_string() const& noexcept override;
+
+  bool could_be_operator() const& noexcept override;
+
+  inline const auto& view_handler() const& noexcept { return handler; }
 
   inline const auto& view_argument() const& noexcept { return argument; }
-}
+};
 
 #endif  // UNARY_EXPRESSION_HPP

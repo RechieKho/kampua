@@ -9,13 +9,7 @@
 
 class FloatExpression : public Expression {
  public:
-  using char_type = CodeCleaver::value_type;
-  using chunk_type = CodeCleaver::chunk_type;
-  using attribute_type = CodeCleaver::attribute_type;
-  using entry_type = CodeCleaver::entry_type;
-
   using value_type = double;
-  using string_slice_type = std::basic_string_view<char_type>;
 
  private:
   value_type value;
@@ -25,7 +19,11 @@ class FloatExpression : public Expression {
 
   inline FloatExpression(value_type p_value) noexcept : value(p_value) {}
 
-  inline auto operator<=>(value_type p_value) const& noexcept = default;
+  ~FloatExpression() override;
+
+  string_type as_string() const& noexcept override;
+
+  bool could_be_operator() const& noexcept override;
 
   inline auto get() const& noexcept { return value; }
 
